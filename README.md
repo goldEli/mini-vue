@@ -18,5 +18,5 @@ effect(() => {
 })
 
 data => set trigger dep
-     => get  trace dep
+     => get  track dep
 ```

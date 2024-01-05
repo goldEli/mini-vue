@@ -1,12 +1,12 @@
-import { trace, trigger } from "./effect";
+import { track, trigger } from "./effect";
 
 export function reactive(raw) {
   return new Proxy(raw, {
     get: (target, key) => {
       const value = Reflect.get(target, key);
 
-      trace(target, key);
-      // trace dep
+      track(target, key);
+      // track dep
       return value;
     },
     set: (target, key, newValue) => {

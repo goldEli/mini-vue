@@ -1,5 +1,5 @@
 const targetMap = new Map();
-export function trace(target, key) {
+export function track(target, key) {
   let depsMap = targetMap.get(target);
   if (!depsMap) {
     depsMap = new Map();
@@ -23,6 +23,7 @@ export class ReactiveEffect {
     this._fn = fn;
   }
   run() {
+    activeEffect = this;
     this._fn();
   }
 }
@@ -30,7 +31,6 @@ export class ReactiveEffect {
 export function effect(fn) {
   const _effect = new ReactiveEffect(fn);
   // inject dep
-  activeEffect = _effect;
   _effect.run();
 }
 
