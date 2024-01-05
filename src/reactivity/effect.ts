@@ -15,13 +15,23 @@ export function trace(target, key) {
 
 let activeEffect;
 
+// 用于依赖收集
+export class ReactiveEffect {
+  private _fn: any;
+
+  constructor(fn) {
+    this._fn = fn;
+  }
+  run() {
+    this._fn();
+  }
+}
+
 export function effect(fn) {
+  const _effect = new ReactiveEffect(fn);
   // inject dep
-  activeEffect = fn;
-
-  // call fn
-  fn();
-
+  activeEffect = _effect;
+  _effect.run();
 }
 
 export function trigger(target, key) {
@@ -29,6 +39,6 @@ export function trigger(target, key) {
   const depsMap = targetMap.get(target);
   const deps = depsMap.get(key);
   deps.forEach((dep) => {
-    dep();
+    dep.run();
   });
 }
