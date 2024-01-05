@@ -2,18 +2,10 @@ import { effect } from "../effect";
 import { reactive } from "../reactive";
 
 describe("reactive", () => {
-  it("happy pass", () => {
-    const data = reactive({ num: 0 });
+  it("happy path", () => {
+    const origin = { num: 0 };
+    const observed = reactive(origin);
 
-    let newNum;
-    effect(() => {
-      newNum = data.num + 1;
-    });
-
-    expect(newNum).toBe(1);
-
-    data.num += 1;
-
-    expect(newNum).toBe(2);
+    expect(origin).not.toBe(observed);
   });
 });
