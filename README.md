@@ -28,3 +28,12 @@ data => set trigger dep
 * set 的时候 trigger依赖
 * effect 运行返回 runner
 * TODO 这个effect 和 watchEffect 有什么区别？
+
+### scheduler 参数
+
+```js
+effect(fn, { scheduler })
+```
+
+* 初始化时 fn 会被调用
+* 当响应式数据 set, trigger的时候 fn 不会被调用，scheduler 会被调用

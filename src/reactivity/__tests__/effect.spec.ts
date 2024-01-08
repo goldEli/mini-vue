@@ -35,4 +35,36 @@ describe("effect", () => {
     // test runner return
     expect(result).toBe("foo");
   });
+
+  it("scheduler", () =>{
+    let dummy;
+    let run: any;
+    const scheduler = jest.fn(() => {
+      run = runner
+    })
+
+    const data = reactive({num: 0})
+
+    const runner = effect(() => {
+      dummy = data.num;
+    }, {scheduler})
+
+    // scheduler not called first
+    expect(scheduler).not.toHaveBeenCalled();
+    // fn called
+    expect(dummy).toBe(0);
+
+    data.num++;
+    // fn should not called
+    expect(dummy).toBe(0);
+
+    // scheduler called
+    expect(scheduler).toHaveBeenCalledTimes(1);
+
+    // manually run
+
+    run()
+    expect(dummy).toBe(1);
+
+  })
 });
