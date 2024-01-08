@@ -24,14 +24,17 @@ export class ReactiveEffect {
   }
   run() {
     activeEffect = this;
-    this._fn();
+    return this._fn();
   }
 }
 
 export function effect(fn) {
   const _effect = new ReactiveEffect(fn);
-  // inject dep
+
   _effect.run();
+  const runner = _effect.run.bind(_effect);
+
+  return runner;
 }
 
 export function trigger(target, key) {
