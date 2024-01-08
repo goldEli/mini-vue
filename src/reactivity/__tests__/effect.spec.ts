@@ -1,4 +1,4 @@
-import { effect } from "../effect";
+import { effect, stop } from "../effect";
 import { reactive } from "../reactive";
 
 describe("effect", () => {
@@ -36,18 +36,21 @@ describe("effect", () => {
     expect(result).toBe("foo");
   });
 
-  it("scheduler", () =>{
+  it("scheduler", () => {
     let dummy;
     let run: any;
     const scheduler = jest.fn(() => {
-      run = runner
-    })
+      run = runner;
+    });
 
-    const data = reactive({num: 0})
+    const data = reactive({ num: 0 });
 
-    const runner = effect(() => {
-      dummy = data.num;
-    }, {scheduler})
+    const runner = effect(
+      () => {
+        dummy = data.num;
+      },
+      { scheduler }
+    );
 
     // scheduler not called first
     expect(scheduler).not.toHaveBeenCalled();
@@ -63,8 +66,43 @@ describe("effect", () => {
 
     // manually run
 
-    run()
+    run();
     expect(dummy).toBe(1);
+  });
+  it("stop", () => {
+    const data = reactive({ num: 0 });
+    let dummy;
+    // const onStop = jest.fn();
+    const runner = effect(() => {
+      dummy = data.num;
+    });
+    expect(dummy).toBe(0);
+    data.num = 2;
+    expect(dummy).toBe(2);
 
-  })
+    stop(runner);
+    data.num = 3;
+    expect(dummy).toBe(2);
+
+    // stopped effect should still be manually callable
+    runner();
+    expect(dummy).toBe(3);
+  });
+  it("onStop", () => {
+    const data = reactive({ num: 0 });
+
+    let dummy;
+    const onStop = jest.fn();
+    const runner = effect(
+      () => {
+        dummy = data.num;
+      },
+      { onStop }
+    );
+
+    expect(dummy).toBe(0);
+
+    stop(runner);
+    expect(onStop).toHaveBeenCalledTimes(1);
+  });
 });

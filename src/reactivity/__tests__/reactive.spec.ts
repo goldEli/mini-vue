@@ -7,5 +7,6 @@ describe("reactive", () => {
     const observed = reactive(origin);
 
     expect(origin).not.toBe(observed);
+    expect(observed.num).toBe(0);
   });
 });
