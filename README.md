@@ -42,3 +42,9 @@ effect(fn, { scheduler })
 
 * stop 的时候，会从依赖中删除当前 effect
 * onStop: 当 stop 执行后，会执行 onStop，处理用户逻辑
+
+# Readonly
+
+* 只读，不能修改
+* 使用场景：把响应式变成只读
+* 没啥用
