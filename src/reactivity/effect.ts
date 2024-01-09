@@ -22,11 +22,34 @@ export function track(target, key) {
   // 如果收集过就不添加
   if (dep.has(activeEffect)) return;
 
+  trackEffects(dep);
+}
+
+export function trackEffects(dep) {
+  // if (!isTracking()) return;
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
 }
 
-function isTracking() {
+export function trigger(target, key) {
+  // trigger dep
+  const depMap = targetMap.get(target);
+  const dep = depMap.get(key);
+
+  triggerEffects(dep);
+}
+
+export function triggerEffects(dep) {
+  for (let effect of dep) {
+    if (effect.scheduler) {
+      effect.scheduler();
+    } else {
+      effect.run();
+    }
+  }
+}
+
+export function isTracking() {
   return shouldTrack && activeEffect !== undefined;
 }
 
@@ -88,20 +111,6 @@ export function effect(fn, options: effectOptions = {}) {
   const runner: any = _effect.run.bind(_effect);
   runner.effect = _effect;
   return runner;
-}
-
-export function trigger(target, key) {
-  // trigger dep
-  const depMap = targetMap.get(target);
-  const deps = depMap.get(key);
-
-  for (let effect of deps) {
-    if (effect.scheduler) {
-      effect.scheduler();
-    } else {
-      effect.run();
-    }
-  }
 }
 
 export function stop(runner: any) {

@@ -68,3 +68,9 @@ effect(fn, { scheduler })
 # isProxy
 
 * 判断是否是代理对象 isReactive 和 isReadonly 
+
+# Ref
+
+* 为布尔、数字、字符串创建响应式数据
+* 由于不是对象无法使用 proxy，所以在内容构造一个对象，赋值给value
+* 注：边缘case，当修改的值和原值相等的时候，不会触发更新
