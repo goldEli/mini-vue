@@ -58,3 +58,5 @@ effect(fn, { scheduler })
 
 * stop 的时候，会从依赖中删除当前 effect
 * 如果后续又有get操作，又会会重新track
+
+# 嵌套 readonly 和 嵌套 reactive
