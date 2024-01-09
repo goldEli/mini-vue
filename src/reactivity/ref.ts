@@ -51,3 +51,30 @@ export function unRef(ref) {
   }
   return ref;
 }
+
+export function proxyRef(obj) {
+  /**
+   * get -> isRef ? obj.value : obj
+   * set -> isRef ? newValue : target[key].value = newValue
+   */
+
+  return new Proxy(obj, {
+    get: (target, key) => {
+      const res = Reflect.get(target, key)
+      return unRef(res);
+    },
+    set: (target, key, newValue) => {
+        /**
+         * 1. 原值是ref，新值ref 直接替换
+         * 2. 原值是ref, 新值不是ref 通过.value 修改
+         * 3. 原值不是ref, 新值ref 直接替换
+         * 4. 原值不是ref, 新值不是ref 直接替换
+         */
+        if (isRef(target[key]) && !isRef(newValue)) {
+          target[key].value = newValue;
+          return true
+        }
+        return Reflect.set(target, key, newValue);
+    }
+  });
+}
