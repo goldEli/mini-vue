@@ -60,3 +60,7 @@ effect(fn, { scheduler })
 * 如果后续又有get操作，又会会重新track
 
 # 嵌套 readonly 和 嵌套 reactive
+
+# shallowReadonly
+
+有时候并不希望递归处理我们的数据，这里就需要用shallowReadonly
