@@ -1,7 +1,13 @@
 import { extend } from "./shared";
 
 const targetMap = new Map();
+// 当前 effect
+let activeEffect: ReactiveEffect;
+// 是否可以收集依赖
+let shouldTrack = false;
+
 export function track(target, key) {
+  if (!isTracking()) return;
   let depMap = targetMap.get(target);
   if (!depMap) {
     depMap = new Map();
@@ -12,15 +18,17 @@ export function track(target, key) {
     dep = new Set();
     depMap.set(key, dep);
   }
-  if (!activeEffect) {
-    return
-  }
+
+  // 如果收集过就不添加
+  if (dep.has(activeEffect)) return;
 
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
 }
 
-let activeEffect: ReactiveEffect;
+function isTracking() {
+  return shouldTrack && activeEffect !== undefined;
+}
 
 type effectOptions = {
   scheduler?: Function;
@@ -39,8 +47,20 @@ export class ReactiveEffect {
     this.scheduler = scheduler;
   }
   run() {
+    // 如果被stop
+    if (!this.active) {
+      return this._fn();
+    }
+
+    /**
+     * 每次执行完后 将 shouldTrack 关闭，避免收集到 stop 的 effect
+     */
+    shouldTrack = true;
     activeEffect = this;
-    return this._fn();
+    const res = this._fn();
+    shouldTrack = false;
+
+    return res;
   }
   stop() {
     if (!this.active) {

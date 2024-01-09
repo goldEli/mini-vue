@@ -81,8 +81,9 @@ describe("effect", () => {
     expect(dummy).toBe(2);
 
     stop(runner);
-    data.num = 3;
+    data.num += 1;
     expect(dummy).toBe(2);
+
 
     // stopped effect should still be manually callable
     runner();

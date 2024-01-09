@@ -53,3 +53,8 @@ effect(fn, { scheduler })
 
 * isReadonly 判断是否是只读的
 * isReactive 判断是否是响应式的
+
+# stop 修复
+
+* stop 的时候，会从依赖中删除当前 effect
+* 如果后续又有get操作，又会会重新track
