@@ -1,4 +1,4 @@
-import { readonly, isReadonly } from "../reactive";
+import { readonly, isReadonly, isProxy } from "../reactive";
 
 describe("readonly", () => {
   it("should call console.warn when set", () => {
@@ -16,6 +16,7 @@ describe("readonly", () => {
 
     expect(wrapped).not.toBe(original);
     expect(wrapped.num).toBe(original.num);
+    expect(isProxy(wrapped)).toBe(true);
 
     expect(isReadonly(wrapped)).toBe(true);
     expect(isReadonly(original)).toBe(false);
@@ -23,7 +24,7 @@ describe("readonly", () => {
   it("nest readonly", () => {
     const original = { foo: { bar: 1 }, arr: [{ baz: 2 }] };
     const observed = readonly(original);
-    
+
     expect(isReadonly(observed)).toBe(true);
     expect(isReadonly(observed.foo)).toBe(true);
     expect(isReadonly(observed.foo.bar)).toBe(false);

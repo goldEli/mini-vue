@@ -63,4 +63,8 @@ effect(fn, { scheduler })
 
 # shallowReadonly
 
-有时候并不希望递归处理我们的数据，这里就需要用shallowReadonly
+性能角度考虑，有时候并不希望递归处理我们的数据，这里就需要用shallowReadonly
+
+# isProxy
+
+* 判断是否是代理对象 isReactive 和 isReadonly 
