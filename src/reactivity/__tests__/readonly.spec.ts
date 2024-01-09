@@ -1,4 +1,4 @@
-import { readonly } from "../reactive";
+import { readonly, isReadonly } from "../reactive";
 
 describe("readonly", () => {
   it("should call console.warn when set", () => {
@@ -6,8 +6,6 @@ describe("readonly", () => {
     const wrapped = readonly(original);
 
     console.warn = jest.fn();
-
-
     wrapped.num = 2;
 
     expect(console.warn).toHaveBeenCalled();
@@ -18,6 +16,9 @@ describe("readonly", () => {
 
     expect(wrapped).not.toBe(original);
     expect(wrapped.num).toBe(original.num);
+
+    expect(isReadonly(wrapped)).toBe(true);
+    expect(isReadonly(original)).toBe(false);
 
   });
 });

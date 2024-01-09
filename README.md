@@ -48,3 +48,8 @@ effect(fn, { scheduler })
 * 只读，不能修改
 * 使用场景：把响应式变成只读
 * 没啥用
+
+# isReadonly and isReactive
+
+* isReadonly 判断是否是只读的
+* isReactive 判断是否是响应式的

@@ -1,5 +1,5 @@
 import { effect } from "../effect";
-import { reactive } from "../reactive";
+import { reactive, isReactive } from "../reactive";
 
 describe("reactive", () => {
   it("happy path", () => {
@@ -8,5 +8,8 @@ describe("reactive", () => {
 
     expect(origin).not.toBe(observed);
     expect(observed.num).toBe(0);
+
+    expect(isReactive(observed)).toBe(true);
+    expect(isReactive(origin)).toBe(false);
   });
 });
