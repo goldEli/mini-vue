@@ -66,6 +66,7 @@ effect(fn, { scheduler })
 # shallowReadonly
 
 性能角度考虑，有时候并不希望递归处理我们的数据，这里就需要用shallowReadonly
+比如 处理 props
 
 # isProxy
 
