@@ -94,3 +94,10 @@ createApp
 => render 
 => patch => processComponent => mountComponent => createComponentInstance => setupComponent => setupStatefulComponent => handleSetupResult => finishComponentSetup
                                                                                                                       => setupRenderEffect => patch
+
+
+# rollup
+
+```
+yarn add @rollup/plugin-typescript@8.2.5 rollup@2.57.0 tslib@2.3.1
+```

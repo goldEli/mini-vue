@@ -52,7 +52,7 @@ export function handleSetupResult(instance: ComponentInstance, setupResult) {
 export function finishComponentSetup(instance: ComponentInstance) {
   const Component = instance.type;
 
-  if (!Component.render) {
+  if (Component.render) {
     instance.render = Component.render;
   }
 }
