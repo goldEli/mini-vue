@@ -1,5 +1,5 @@
 import { createComponentInstance, setupComponent } from "./component";
-import { PublicInstanceProxyHandlers } from "./componentPubliccInstance";
+import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { VNode } from "./vnode";
 
 export function render(vnode: VNode, container) {
