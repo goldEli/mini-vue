@@ -120,4 +120,10 @@ processElement => mountElement => create element => append to container
 
 render 方法需要访问 setup state
 
-采用 instance 代理 setup state
+instance 挂载一个proxy属性，将proxy绑定到render函数，render 内部调用this,实际上是访问到 proxy，拦截get 基于 key 拿到 setup的state
+
+# $el
+
+* for components with a single root element, $el will point to that element
+* 同样通过 proxy 拦截 key 为 $el 的 get 返回 root element
+

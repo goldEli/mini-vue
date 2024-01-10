@@ -1,4 +1,5 @@
 import { createComponentInstance, setupComponent } from "./component";
+import { PublicInstanceProxyHandlers } from "./componentPubliccInstance";
 import { VNode } from "./vnode";
 
 export function render(vnode: VNode, container) {
@@ -22,6 +23,7 @@ export function processElement(vnode: VNode, container) {
 export function mountElement(vnode: VNode, container) {
   // create dom
   const el = document.createElement(vnode.type);
+  vnode.el = el;
 
   const { props, children } = vnode;
 
@@ -34,7 +36,7 @@ export function mountElement(vnode: VNode, container) {
   if (typeof children === "string") {
     el.textContent = children;
   } else if (Array.isArray(children)) {
-    mountChild(vnode, container);
+    mountChild(vnode, el);
   }
 
   container.append(el);
@@ -54,20 +56,12 @@ export function mountComponent(vnode: VNode, container) {
   // create component instance
   const instance = createComponentInstance(vnode);
 
-  instance.proxy = new Proxy(instance, {
-    get(target, key) {
-      const { setupState } = target;
-      if (key in setupState) {
-        return setupState[key];
-      }
-      return undefined;
-    },
-  });
+  instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
 
   // 初始化 component
   setupComponent(instance);
 
-  // TODO 不晓得干啥
+  // 执行组件 render 处理后续
   setupRenderEffect(instance, container);
 }
 
@@ -75,4 +69,6 @@ export function setupRenderEffect(instance, container) {
   const subTree = instance.render.call(instance.proxy);
 
   patch(subTree, container);
+  console.log(subTree);
+  instance.vnode.el = subTree.el;
 }

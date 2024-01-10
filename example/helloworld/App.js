@@ -2,8 +2,8 @@ import { h } from "../../lib/guide-mini-vue.esm.js"
 
 export const App = {
     render() {
-        console.log(this)
-        return h("div", {}, [
+        window.self = this
+        return h("div", { id: 'xxx' }, [
             h("p", { class: "red bold" }, this.aaa),
             h("p", { class: "blue", id: "jack" }, "hi " + this.msg),
         ])
