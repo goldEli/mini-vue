@@ -54,6 +54,16 @@ export function mountComponent(vnode: VNode, container) {
   // create component instance
   const instance = createComponentInstance(vnode);
 
+  instance.proxy = new Proxy(instance, {
+    get(target, key) {
+      const { setupState } = target;
+      if (key in setupState) {
+        return setupState[key];
+      }
+      return undefined;
+    },
+  });
+
   // 初始化 component
   setupComponent(instance);
 
@@ -62,7 +72,7 @@ export function mountComponent(vnode: VNode, container) {
 }
 
 export function setupRenderEffect(instance, container) {
-  const subTree = instance.render();
+  const subTree = instance.render.call(instance.proxy);
 
   patch(subTree, container);
 }

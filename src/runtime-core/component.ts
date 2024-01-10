@@ -5,12 +5,14 @@ export type ComponentInstance = {
   type: VNode["type"];
   setupState?: any;
   render?: any;
+  proxy?: any;
 };
 
 export function createComponentInstance(vnode: VNode) {
   const component: ComponentInstance = {
     vnode,
     type: vnode.type,
+    setupState: {},
   };
 
   return component;

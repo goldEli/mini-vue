@@ -115,3 +115,9 @@ processElement => mountElement => create element => append to container
                                => process props => setAttribute
                                => process children => string => append to container
                                                    => array => patch    
+
+# setup state
+
+render 方法需要访问 setup state
+
+采用 instance 代理 setup state
