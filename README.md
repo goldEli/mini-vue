@@ -94,6 +94,8 @@ createApp
 => render 
 => patch => processComponent => mountComponent => createComponentInstance => setupComponent => setupStatefulComponent => handleSetupResult => finishComponentSetup
                                                                                                                       => setupRenderEffect => patch
+         => processElement => mountElement => children => string => append to container
+                                                       => array => patch
 
 
 # rollup
@@ -101,3 +103,15 @@ createApp
 ```
 yarn add @rollup/plugin-typescript@8.2.5 rollup@2.57.0 tslib@2.3.1
 ```
+
+# process element
+
+* type 判断是组件还是元素 如果是 div  p 等元素字符串 则处理元素
+* 元素属性 分为 type props children
+* props 通过 setAttribute 处理
+* children 则继续调用patch 处理
+
+processElement => mountElement => create element => append to container
+                               => process props => setAttribute
+                               => process children => string => append to container
+                                                   => array => patch    

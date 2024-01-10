@@ -22,20 +22,28 @@ export function processElement(vnode: VNode, container) {
 export function mountElement(vnode: VNode, container) {
   // create dom
   const el = document.createElement(vnode.type);
-  for (const key in vnode.props) {
-    (el as HTMLElement).setAttribute(key, vnode.props[key]);
+
+  const { props, children } = vnode;
+
+  // process props
+  for (const key in props) {
+    (el as HTMLElement).setAttribute(key, props[key]);
   }
 
-  // children
-  if (typeof vnode.children === "string") {
-    el.textContent = vnode.children;
-    container.append(el);
-  } else {
-    // array
-    vnode.children.forEach(child => {
-      patch(child, container);
-    });
+  // process children
+  if (typeof children === "string") {
+    el.textContent = children;
+  } else if (Array.isArray(children)) {
+    mountChild(vnode, container);
   }
+
+  container.append(el);
+}
+
+function mountChild(vnode: VNode, container) {
+  vnode.children.forEach((child) => {
+    patch(child, container);
+  });
 }
 
 export function processComponent(vnode: VNode, container) {
