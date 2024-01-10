@@ -86,3 +86,11 @@ effect(fn, { scheduler })
 * .value 时才会去获取，执行effect
 * 当属性没有发生变化时，.value 调用缓存
 * 当计算属性发生改变，需要重新计算缓存，利用 scheduler 把 dirty 改为 true
+
+# component 主流程
+
+createApp 
+=> createVNode 
+=> render 
+=> patch => processComponent => mountComponent => createComponentInstance => setupComponent => setupStatefulComponent => handleSetupResult => finishComponentSetup
+                                                                                                                      => setupRenderEffect => patch
