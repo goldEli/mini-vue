@@ -1,6 +1,8 @@
 # mini-vue
 learn vue3
 
+[流程图](https://www.yuque.com/miaoyu-lgfuc/ul2581/xgcrdiqvupc6qe2g?singleDoc#)
+
 * 初始化项目
 * 引入jest
 * babel 配置
