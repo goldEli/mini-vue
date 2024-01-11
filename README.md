@@ -149,7 +149,11 @@ instance 挂载一个proxy属性，将proxy绑定到render函数，render 内部
 比如onClick 转换成 window.addEventListener('click', () => {})
 onClick => Click => click
 
+# props
 
+* 创建 instance 的时候，将 props 挂载到 instance.props
+* 调用 instance.render 时，将props作为参数传入
+* props,shadow readonly 不能被修改，如果被修改报错提醒
 
 
 

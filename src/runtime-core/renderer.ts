@@ -1,3 +1,4 @@
+import { shallowReadonly } from "../reactivity/reactive";
 import { ShapeFlogs } from "../shared/ShapeFlags";
 import { ComponentInstance, createComponentInstance, setupComponent } from "./component";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
@@ -82,7 +83,7 @@ export function mountComponent(vnode: VNode, container) {
 }
 
 export function setupRenderEffect(instance: ComponentInstance, container) {
-  const subTree = instance.render.call(instance.proxy, instance.props);
+  const subTree = instance.render.call(instance.proxy, shallowReadonly(instance.props));
 
   patch(subTree, container);
   console.log(subTree);
