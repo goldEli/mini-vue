@@ -154,6 +154,11 @@ onClick => Click => click
 * 创建 instance 的时候，将 props 挂载到 instance.props
 * 调用 setup 时，将props作为参数传入
 * props,shadow readonly 不能被修改，如果被修改报错提醒
+* 在 render 方法可以直接通过this 访问props属性 这里需要通过 instance.proxy 代理
 
+# emit
 
-
+* 儿子调用父组件的自定义事件
+* emit 挂载到 instance, 通过 props 拿到父组件定义的自定义事件
+* 在执行 setup 时候传入 emit
+* 事件名处理  onAdd -> add   onAddFoo -> add-foo

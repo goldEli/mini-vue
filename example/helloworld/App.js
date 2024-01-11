@@ -5,7 +5,14 @@ export const App = {
     render() {
         window.self = this
         return h("div", { id: 'xxx' }, [
-            h(Foo, { message: 'hi son' }),
+            h(Foo, {
+                message: 'hi son', onAdd: (num) => {
+                    console.log("trigger add" + num)
+                },
+                onAddFoo() {
+                    console.log("onAddFoo");
+                },
+            }),
             h("p", {
                 class: "blue", id: "jack", onMouseDown: () => {
                     console.log("down")

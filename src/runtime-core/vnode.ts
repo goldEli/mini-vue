@@ -7,6 +7,7 @@ export type VNode = {
   children: any;
   el: any;
   shapeFlag: ShapeFlogs;
+  emit: any;
 };
 export function createVNode(type, props?, children?) {
   const vnode: VNode = {
@@ -14,6 +15,7 @@ export function createVNode(type, props?, children?) {
     props,
     children,
     el: null,
+    emit: null, // 事件处理函数
     shapeFlag: getShapeFlag(type),
   };
 
