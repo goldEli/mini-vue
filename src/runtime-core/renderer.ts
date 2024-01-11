@@ -21,6 +21,16 @@ export function processElement(vnode: VNode, container) {
   mountElement(vnode, container);
 }
 
+const isOn = (key: string) => {
+  return /^on[A-Z]/.test(key);
+};
+
+const getEventName = (key: string) => {
+  // onClick => click
+
+  return key.slice(2).toLowerCase();
+};
+
 export function mountElement(vnode: VNode, container) {
   // create dom
   const el = document.createElement(vnode.type);
@@ -30,7 +40,12 @@ export function mountElement(vnode: VNode, container) {
 
   // process props
   for (const key in props) {
-    (el as HTMLElement).setAttribute(key, props[key]);
+    if (isOn(key)) {
+      const eventName = getEventName(key);
+      el.addEventListener(eventName, props[key]);
+    } else {
+      (el as HTMLElement).setAttribute(key, props[key]);
+    }
   }
 
   // process children

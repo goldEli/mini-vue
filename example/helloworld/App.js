@@ -5,7 +5,16 @@ export const App = {
         window.self = this
         return h("div", { id: 'xxx' }, [
             h("p", { class: "red bold" }, this.aaa),
-            h("p", { class: "blue", id: "jack" }, "hi " + this.msg),
+            h("p", {
+                class: "blue", id: "jack", onMouseDown: () => {
+                    console.log("down")
+                }
+            }, "hi " + this.msg),
+            h("button", {
+                onClick: () => {
+                    console.log("clicked")
+                }
+            }, "click  me"),
         ])
         // return h("div", "hi, " + this.msg)
     },

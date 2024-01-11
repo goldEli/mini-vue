@@ -143,6 +143,12 @@ instance 挂载一个proxy属性，将proxy绑定到render函数，render 内部
 0101 表示元素和儿子数据
 是否是元素 0101 & 0100 = 0100 true
 
+# 事件注册
+
+检测 props 的参数 on + Event
+比如onClick 转换成 window.addEventListener('click', () => {})
+onClick => Click => click
+
 
 
 
