@@ -1,3 +1,4 @@
+import { isObject } from "../shared/index";
 import {
   mutableHandlers,
   readonlyHandlers,
@@ -14,11 +15,11 @@ export function reactive(raw) {
 }
 
 export function readonly(raw) {
-  return new Proxy(raw, readonlyHandlers);
+  return createReactiveObject(raw, readonlyHandlers);
 }
 
 export function shallowReadonly(raw) {
-  return new Proxy(raw, shallowReadonlyHandlers);
+  return createReactiveObject(raw, shallowReadonlyHandlers);
 }
 
 export function isReadonly(value) {
@@ -31,4 +32,12 @@ export function isReactive(value) {
 
 export function isProxy(value) {
   return isReadonly(value) || isReactive(value);
+}
+
+function createReactiveObject(target, baseHandlers) {
+  if (!isObject(target)) {
+    console.warn(`target ${target} must be an object`);
+    return target;
+  }
+  return new Proxy(target, baseHandlers);
 }
