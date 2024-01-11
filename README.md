@@ -166,3 +166,8 @@ onClick => Click => click
 # slot
 
 * 具名插销，没有名字的插销默认default名字
+* 插槽作用域
+
+1. 创建虚拟节点：定义插槽类型，如果是组件且children是对象
+2. 初始化插槽：将插槽对象挂载到instance.slots
+3. 调用renderSlot方法，将插槽对象通过代理获取到，然后作为参数传入
