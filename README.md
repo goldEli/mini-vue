@@ -162,3 +162,7 @@ onClick => Click => click
 * emit 挂载到 instance, 通过 props 拿到父组件定义的自定义事件
 * 在执行 setup 时候传入 emit
 * 事件名处理  onAdd -> add   onAddFoo -> add-foo
+
+# slot
+
+* 具名插销，没有名字的插销默认default名字

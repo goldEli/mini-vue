@@ -1,5 +1,5 @@
 import { shallowReadonly } from "../reactivity/reactive";
-import { ShapeFlogs } from "../shared/ShapeFlags";
+import { ShapeFlags } from "../shared/ShapeFlags";
 import { ComponentInstance, createComponentInstance, setupComponent } from "./component";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { VNode, createVNode } from "./vnode";
@@ -10,9 +10,9 @@ export function render(vnode: VNode, container) {
 
 export function patch(vnode: VNode, container) {
   // processElement
-  if (vnode.shapeFlag & ShapeFlogs.ELEMENT) {
+  if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
     processElement(vnode, container);
-  } else if (vnode.shapeFlag & ShapeFlogs.STATEFUL_COMPONENT) {
+  } else if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
     // processComponent
     processComponent(vnode, container);
   }
@@ -50,9 +50,9 @@ export function mountElement(vnode: VNode, container) {
   }
 
   // process children
-  if (vnode.shapeFlag & ShapeFlogs.TEXT_CHILDREN) {
+  if (vnode.shapeFlag & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children;
-  } else if (vnode.shapeFlag & ShapeFlogs.ARRAY_CHILDREN) {
+  } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
     mountChild(vnode, el);
   }
 

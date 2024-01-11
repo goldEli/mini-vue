@@ -1,4 +1,4 @@
-import { ShapeFlogs } from "../shared/ShapeFlags";
+import { ShapeFlags } from "../shared/ShapeFlags";
 import { isObject } from "../shared/index";
 
 export type VNode = {
@@ -6,7 +6,7 @@ export type VNode = {
   props: any;
   children: any;
   el: any;
-  shapeFlag: ShapeFlogs;
+  shapeFlag: ShapeFlags;
   emit: any;
 };
 export function createVNode(type, props?, children?) {
@@ -20,9 +20,15 @@ export function createVNode(type, props?, children?) {
   };
 
   if (typeof vnode.children === "string") {
-    vnode.shapeFlag |= ShapeFlogs.TEXT_CHILDREN;
+    vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
   } else if (Array.isArray(vnode.children)) {
-    vnode.shapeFlag |= ShapeFlogs.ARRAY_CHILDREN;
+    vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
+  }
+
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+    if (isObject(vnode.children)) {
+      vnode.shapeFlag |= ShapeFlags.SLOT_CHILDREN;
+    }
   }
 
   return vnode;
@@ -30,6 +36,6 @@ export function createVNode(type, props?, children?) {
 
 function getShapeFlag(type) {
   return typeof type === "string"
-    ? ShapeFlogs.ELEMENT
-    : ShapeFlogs.STATEFUL_COMPONENT;
+    ? ShapeFlags.ELEMENT
+    : ShapeFlags.STATEFUL_COMPONENT;
 }
