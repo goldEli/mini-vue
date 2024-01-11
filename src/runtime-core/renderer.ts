@@ -1,3 +1,4 @@
+import { ShapeFlogs } from "../shared/ShapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { VNode } from "./vnode";
@@ -8,9 +9,9 @@ export function render(vnode: VNode, container) {
 
 export function patch(vnode: VNode, container) {
   // processElement
-  if (typeof vnode.type === "string") {
+  if (vnode.shapeFlag & ShapeFlogs.ELEMENT) {
     processElement(vnode, container);
-  } else {
+  } else if (vnode.shapeFlag & ShapeFlogs.STATEFUL_COMPONENT) {
     // processComponent
     processComponent(vnode, container);
   }
@@ -33,9 +34,9 @@ export function mountElement(vnode: VNode, container) {
   }
 
   // process children
-  if (typeof children === "string") {
+  if (vnode.shapeFlag & ShapeFlogs.TEXT_CHILDREN) {
     el.textContent = children;
-  } else if (Array.isArray(children)) {
+  } else if (vnode.shapeFlag & ShapeFlogs.ARRAY_CHILDREN) {
     mountChild(vnode, el);
   }
 

@@ -127,3 +127,23 @@ instance 挂载一个proxy属性，将proxy绑定到render函数，render 内部
 * for components with a single root element, $el will point to that element
 * 同样通过 proxy 拦截 key 为 $el 的 get 返回 root element
 
+# shapeFlags
+
+* 标记当前元素是组件还是元素
+* 标记当前元素儿子是文本还是数组
+* 通过二进制的方式来描述类型
+  * 复合类型用一个值来表示
+  * 使用起来更高效
+  * 但是可读性更低
+
+| 表示都是0才为0
+& 表示都是1才为1 
+
+组件 元素 儿子文本 儿子数组
+0101 表示元素和儿子数据
+是否是元素 0101 & 0100 = 0100 true
+
+
+
+
+
