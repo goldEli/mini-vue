@@ -83,9 +83,8 @@ export function mountComponent(vnode: VNode, container) {
 }
 
 export function setupRenderEffect(instance: ComponentInstance, container) {
-  const subTree = instance.render.call(instance.proxy, shallowReadonly(instance.props));
+  const subTree = instance.render.call(instance.proxy);
 
   patch(subTree, container);
-  console.log(subTree);
   instance.vnode.el = subTree.el;
 }

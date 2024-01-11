@@ -1,3 +1,4 @@
+import { shallowReadonly } from "../reactivity/reactive";
 import { initProps } from "./componentProps";
 import { VNode } from "./vnode";
 
@@ -38,7 +39,7 @@ export function setupStatefulComponent(instance: ComponentInstance) {
   // 执行setup
   const { setup } = Component;
   if (setup) {
-    const setupResult = setup();
+    const setupResult = setup(shallowReadonly(instance.props));
     handleSetupResult(instance, setupResult);
   }
 }
