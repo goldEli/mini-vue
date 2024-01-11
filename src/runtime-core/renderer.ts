@@ -1,7 +1,7 @@
 import { ShapeFlogs } from "../shared/ShapeFlags";
-import { createComponentInstance, setupComponent } from "./component";
+import { ComponentInstance, createComponentInstance, setupComponent } from "./component";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
-import { VNode } from "./vnode";
+import { VNode, createVNode } from "./vnode";
 
 export function render(vnode: VNode, container) {
   patch(vnode, container);
@@ -81,8 +81,8 @@ export function mountComponent(vnode: VNode, container) {
   setupRenderEffect(instance, container);
 }
 
-export function setupRenderEffect(instance, container) {
-  const subTree = instance.render.call(instance.proxy);
+export function setupRenderEffect(instance: ComponentInstance, container) {
+  const subTree = instance.render.call(instance.proxy, instance.props);
 
   patch(subTree, container);
   console.log(subTree);

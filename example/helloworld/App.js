@@ -1,10 +1,11 @@
 import { h } from "../../lib/guide-mini-vue.esm.js"
+import { Foo } from "./Foo.js"
 
 export const App = {
     render() {
         window.self = this
         return h("div", { id: 'xxx' }, [
-            h("p", { class: "red bold" }, this.aaa),
+            h(Foo, { message: 'hi son' }),
             h("p", {
                 class: "blue", id: "jack", onMouseDown: () => {
                     console.log("down")
@@ -21,7 +22,6 @@ export const App = {
     setup() {
         return {
             msg: "mini-vue",
-            aaa: "123"
         }
     }
 }

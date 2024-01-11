@@ -1,3 +1,4 @@
+import { initProps } from "./componentProps";
 import { VNode } from "./vnode";
 
 export type ComponentInstance = {
@@ -6,6 +7,7 @@ export type ComponentInstance = {
   setupState?: any;
   render?: any;
   proxy?: any;
+  props?: any;
 };
 
 export function createComponentInstance(vnode: VNode) {
@@ -13,6 +15,7 @@ export function createComponentInstance(vnode: VNode) {
     vnode,
     type: vnode.type,
     setupState: {},
+    props: {},
   };
 
   return component;
@@ -21,7 +24,7 @@ export function createComponentInstance(vnode: VNode) {
 export function setupComponent(instance: ComponentInstance) {
   // TODO
   // // 初始化props
-  // initProps(instance, instance.vnode.props);
+  initProps(instance, instance.vnode.props);
   // // 初始化slots
   // initSlots(instance, instance.vnode.children);
   // // 初始化事件
