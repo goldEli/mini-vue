@@ -13,16 +13,20 @@ export type ComponentInstance = {
   props?: any;
   emit?: any;
   slots?: any;
+  provides?: any; // 用于实现provide/inject
+  parent?: any
 };
 
-export function createComponentInstance(vnode: VNode) {
+export function createComponentInstance(vnode: VNode, parent) {
   const component: ComponentInstance = {
     vnode,
     type: vnode.type,
     setupState: {},
     props: {},
+    parent,
     emit: () => {},
     slots: {},
+    provides: parent ? parent.provides : [],
   };
 
   component.emit = emit.bind(null, component) as any;

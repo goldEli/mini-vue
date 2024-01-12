@@ -184,3 +184,8 @@ onClick => Click => click
 
 getCurrentInstance 在 setup 中调用，所以在 setup 执行前，赋值 currentInstance
 当setup 执行完，currentInstance 置为null
+
+# provide inject
+
+* 父组件 provider 子组件 inject,inject 取不到可以设置默认值
+* 子组件先找父亲，再找爷爷，再找曾爷爷，直到找到为止，类似于js原型链的，可以基于此实现跨层级读取

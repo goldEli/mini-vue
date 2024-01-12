@@ -7,7 +7,7 @@ export function createApp(App) {
       // create vnode
       const vnode = createVNode(App);
 
-      render(vnode, rootContainer);
+      render(vnode, rootContainer, null);
     },
   };
 }
