@@ -179,3 +179,8 @@ onClick => Click => click
 # Fragment
 
 * 创建虚拟节点 避免用div包裹
+
+# getCurrentInstance
+
+getCurrentInstance 在 setup 中调用，所以在 setup 执行前，赋值 currentInstance
+当setup 执行完，currentInstance 置为null
