@@ -24,7 +24,7 @@ export function createComponentInstance(vnode: VNode) {
     emit: () => {},
     slots: {},
   };
-  
+
   component.emit = emit.bind(null, component) as any;
 
   return component;
@@ -46,9 +46,13 @@ export function setupStatefulComponent(instance: ComponentInstance) {
   // 执行setup
   const { setup } = Component;
   if (setup) {
+    setCurrentInstance(instance);
+
     const setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit,
     });
+
+    setCurrentInstance(null);
     handleSetupResult(instance, setupResult);
   }
 }
@@ -70,4 +74,12 @@ export function finishComponentSetup(instance: ComponentInstance) {
   if (Component.render) {
     instance.render = Component.render;
   }
+}
+
+let currentInstance: ComponentInstance | null = null;
+export function getCurrentInstance() {
+  return currentInstance;
+}
+export function setCurrentInstance(instance: ComponentInstance | null) {
+  currentInstance = instance;
 }
