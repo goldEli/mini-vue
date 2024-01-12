@@ -1,10 +1,10 @@
-import { h } from "../../lib/guide-mini-vue.esm.js";
+import { h, createTextVNode } from "../../lib/guide-mini-vue.esm.js";
 import { Foo } from "./Foo.js";
 
 export const App = {
   name: "App",
   render() {
-    const app = h("div", {}, "App");
+    const app = h("div", {}, createTextVNode("App"));
     // object key
     const foo = h(
       Foo,

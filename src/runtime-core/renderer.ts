@@ -1,25 +1,48 @@
-import { shallowReadonly } from "../reactivity/reactive";
 import { ShapeFlags } from "../shared/ShapeFlags";
-import { ComponentInstance, createComponentInstance, setupComponent } from "./component";
+import {
+  ComponentInstance,
+  createComponentInstance,
+  setupComponent,
+} from "./component";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
-import { VNode, createVNode } from "./vnode";
+import { VNode } from "./vnode";
 
 export function render(vnode: VNode, container) {
   patch(vnode, container);
 }
 
 export function patch(vnode: VNode, container) {
-  // processElement
-  if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
+  if (vnode.shapeFlag & ShapeFlags.TEXT) {
+    processText(vnode, container);
+  } else if (vnode.shapeFlag & ShapeFlags.FRAGMENT) {
+    processFragment(vnode, container);
+  } else if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
     processElement(vnode, container);
   } else if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    // processComponent
     processComponent(vnode, container);
   }
 }
 
-export function processElement(vnode: VNode, container) {
+function processElement(vnode: VNode, container) {
   mountElement(vnode, container);
+}
+
+function processText(vnode: VNode, container) {
+  mountText(vnode, container);
+}
+
+function processFragment(vnode, container) {
+  mountFragment(vnode, container);
+}
+
+function mountText(vnode: VNode, container: any) {
+  const textDom = document.createTextNode(vnode.children);
+  vnode.el = textDom;
+  container.appendChild(textDom);
+}
+
+function mountFragment(vnode: VNode, container: any) {
+  mountChild(vnode, container)
 }
 
 const isOn = (key: string) => {
@@ -54,7 +77,7 @@ export function mountElement(vnode: VNode, container) {
     el.textContent = children;
   } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
     mountChild(vnode, el);
-  }
+  } 
 
   container.append(el);
 }

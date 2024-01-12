@@ -171,3 +171,11 @@ onClick => Click => click
 1. 创建虚拟节点：定义插槽类型，如果是组件且children是对象
 2. 初始化插槽：将插槽对象挂载到instance.slots
 3. 调用renderSlot方法，将插槽对象通过代理获取到，然后作为参数传入
+
+# Text 
+
+增加 TEXT 类型，CHILDREN_TEXT 其实就没有用了
+
+# Fragment
+
+* 创建虚拟节点 避免用div包裹

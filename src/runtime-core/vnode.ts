@@ -1,5 +1,8 @@
 import { ShapeFlags } from "../shared/ShapeFlags";
 import { isObject } from "../shared/index";
+import { Fragment } from "./helpers/renderSlots";
+
+export const Text = Symbol("Text");
 
 export type VNode = {
   type: any;
@@ -19,6 +22,13 @@ export function createVNode(type, props?, children?) {
     shapeFlag: getShapeFlag(type),
   };
 
+  if (vnode.type === Fragment) {
+    vnode.shapeFlag |= ShapeFlags.FRAGMENT;
+  }
+  if (vnode.type === Text) {
+    vnode.shapeFlag |= ShapeFlags.TEXT;
+  }
+
   if (typeof vnode.children === "string") {
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
   } else if (Array.isArray(vnode.children)) {
@@ -32,6 +42,10 @@ export function createVNode(type, props?, children?) {
   }
 
   return vnode;
+}
+
+export function createTextVNode(text: string) {
+  return [createVNode(Text, {}, text)];
 }
 
 function getShapeFlag(type) {

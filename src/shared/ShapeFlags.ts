@@ -9,4 +9,8 @@ export const enum ShapeFlags {
   ARRAY_CHILDREN = 1 << 3, // 1000
   // 儿子是插槽
   SLOT_CHILDREN = 1 << 4, // 10000
+  // 文本
+  TEXT = 1 << 5,
+  // Fragment
+  FRAGMENT = 1 << 6,
 }
