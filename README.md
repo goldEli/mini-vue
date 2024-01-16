@@ -189,3 +189,9 @@ getCurrentInstance 在 setup 中调用，所以在 setup 执行前，赋值 curr
 
 * 父组件 provider 子组件 inject,inject 取不到可以设置默认值
 * 子组件先找父亲，再找爷爷，再找曾爷爷，直到找到为止，类似于js原型链的，可以基于此实现跨层级读取
+* 设计很巧妙
+
+# customer render
+
+vue3 高度模块化，编译 运行时 dom渲染 都进行了分离。可以将dom 渲染替换成自定义的
+比如可以把dom渲染替换成渲染到canvas，用 PixiJS 这个库来操作canvas的渲染
