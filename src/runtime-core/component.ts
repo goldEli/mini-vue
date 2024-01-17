@@ -1,3 +1,4 @@
+import { proxyRef } from "../reactivity";
 import { shallowReadonly } from "../reactivity/reactive";
 import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
@@ -15,12 +16,16 @@ export type ComponentInstance = {
   slots?: any;
   provides?: any; // 用于实现provide/inject
   parent?: any
+  subTree?: any;
+  isMounted?: boolean
 };
 
-export function createComponentInstance(vnode: VNode, parent) {
+export function createComponentInstance(vnode: VNode , parent) {
   const component: ComponentInstance = {
     vnode,
     type: vnode.type,
+    isMounted: false,
+    subTree: {},
     setupState: {},
     props: {},
     parent,
@@ -66,7 +71,7 @@ export function handleSetupResult(instance: ComponentInstance, setupResult) {
 
   // handle object
   if (typeof setupResult === "object") {
-    instance.setupState = setupResult;
+    instance.setupState = proxyRef(setupResult);
   }
 
   finishComponentSetup(instance);

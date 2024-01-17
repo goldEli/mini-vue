@@ -195,3 +195,15 @@ getCurrentInstance 在 setup 中调用，所以在 setup 执行前，赋值 curr
 
 vue3 高度模块化，编译 运行时 dom渲染 都进行了分离。可以将dom 渲染替换成自定义的
 比如可以把dom渲染替换成渲染到canvas，用 PixiJS 这个库来操作canvas的渲染
+
+# element 流程搭建
+
+1. 创建虚拟dom =》 创建真实节点
+2. 更新数据  =》 更新虚拟dom
+3. 对比新旧虚拟dom =》 update
+
+利用 effect 收集虚拟dom创建方法，数据变化后update
+
+# update props
+
+
