@@ -1,4 +1,5 @@
 import { effect } from "../reactivity/effect";
+import { EMPTY_OBJ } from "../shared";
 import { ShapeFlags } from "../shared/ShapeFlags";
 import {
   ComponentInstance,
@@ -44,6 +45,39 @@ export function createRenderer(options: { createElement; patchProp; insert }) {
   // update element
   function patchElement(v1, v2, container, parent) {
     console.log("patchElement", v1, v2, container, parent);
+
+    const el = v1.el;
+    v2.el = el;
+    const oldProps = v1.props || EMPTY_OBJ;
+    const nextProps = v2.props || EMPTY_OBJ;
+    patchProps(el, oldProps, nextProps);
+  }
+
+  function patchProps(el, oldProps, nextProps) {
+    console.log({ oldProps, nextProps });
+    if (oldProps === nextProps) {
+      return;
+    }
+
+    for (const key in nextProps) {
+      const prevProp = oldProps[key];
+      const nextProp = nextProps[key];
+      // 数据不同更新
+      if (prevProp !== nextProp) {
+        hostPatchProp(el, key, prevProp, nextProp);
+      }
+      // nextProps undefine 移除 key
+      if (nextProp === undefined) {
+        hostPatchProp(el, key, prevProp, undefined);
+      }
+    }
+
+    // 如果key 不存在了 移除
+    for (const key in oldProps) {
+      if (!(key in nextProps)) {
+        hostPatchProp(el, key, undefined, undefined);
+      }
+    }
   }
 
   function processText(v1, v2, container) {
@@ -72,7 +106,10 @@ export function createRenderer(options: { createElement; patchProp; insert }) {
 
     const { props, children } = vnode;
 
-    hostPatchProp(el, props);
+    for (const key in props) {
+      const value = props[key];
+      hostPatchProp(el, key, null, value);
+    }
 
     // process children
     if (vnode.shapeFlag & ShapeFlags.TEXT_CHILDREN) {
@@ -86,7 +123,6 @@ export function createRenderer(options: { createElement; patchProp; insert }) {
   }
 
   function mountChild(vnode: VNode, container, parent) {
-
     for (let i = 0; i < vnode.children.length; i++) {
       const child = vnode.children[i];
       patch(null, child, container, parent);
@@ -126,7 +162,7 @@ export function createRenderer(options: { createElement; patchProp; insert }) {
 
         console.log(subTree);
         patch(null, subTree, container, instance);
-        // instance.subTree = subTree;
+        instance.subTree = subTree;
         instance.vnode.el = subTree.el;
         instance.isMounted = true;
       }

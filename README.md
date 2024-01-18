@@ -206,4 +206,8 @@ vue3 高度模块化，编译 运行时 dom渲染 都进行了分离。可以将
 
 # update props
 
+1. 原来的props.key 的值被修改了 =》 触发update
+2. 原来的props.key 的值被设置为了undefind =》 触发remove
+3. 原来的props.key 的key不存在了 =》 触发remove
+
 
