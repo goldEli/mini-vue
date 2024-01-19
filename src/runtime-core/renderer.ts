@@ -20,27 +20,27 @@ export function createRenderer(options) {
   } = options;
 
   function render(vnode: VNode, container, parent) {
-    patch(null, vnode, container, parent);
+    patch(null, vnode, container, parent, null);
   }
 
-  function patch(v1: VNode | null, v2: VNode, container, parent) {
+  function patch(v1: VNode | null, v2: VNode, container, parent, anchor) {
     if (v2.shapeFlag & ShapeFlags.TEXT) {
       processText(v1, v2, container);
     } else if (v2.shapeFlag & ShapeFlags.FRAGMENT) {
       processFragment(v1, v2, container, parent);
     } else if (v2.shapeFlag & ShapeFlags.ELEMENT) {
-      processElement(v1, v2, container, parent);
+      processElement(v1, v2, container, parent, anchor);
     } else if (v2.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
       processComponent(v1, v2, container, parent);
     }
   }
 
-  function processElement(v1, v2, container, parent) {
+  function processElement(v1, v2, container, parent, anchor) {
     // update
     if (v1) {
       patchElement(v1, v2, container, parent);
     } else {
-      mountElement(v2, container, parent);
+      mountElement(v2, container, parent, anchor);
     }
   }
 
@@ -136,15 +136,23 @@ export function createRenderer(options) {
     }
 
     console.log({ e1, i, e2 });
-    // 添加到后面
+    // 后面新增
     if (i > e1) {
-      // mountChild(v2.children?.slice(i, e2 + 1), container, parent);
+      const anchor = v1.children[i].el
+      debugger
       while (i <= e2) {
-        patch(null, v2.children[i], container, parent);
+        patch(null, v2.children[i], container, parent, anchor);
         ++i;
       }
     }
-    // 添加到前面
+    // 前面新增
+    // if (i > e1) {
+    //   while (i <= e2) {
+    //     patch(null, v2.children[i], container, parent, null);
+    //     ++i;
+    //   }
+    // }
+
   }
 
   function unmountChildren(children) {
@@ -198,7 +206,7 @@ export function createRenderer(options) {
     mountChild(vnode, container, parent);
   }
 
-  function mountElement(vnode: VNode, container, parent) {
+  function mountElement(vnode: VNode, container, parent, anchor) {
     // create dom
     // const el = document.createElement(vnode.type);
     const el = hostCreateElement(vnode.type);
@@ -219,13 +227,13 @@ export function createRenderer(options) {
     }
 
     // container.append(el);
-    hostInsert(el, container);
+    hostInsert(el, container, anchor);
   }
 
   function mountChild(children, container, parent) {
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      patch(null, child, container, parent);
+      patch(null, child, container, parent, null);
     }
   }
 
@@ -254,13 +262,13 @@ export function createRenderer(options) {
 
         const prevSubTree = instance.subTree;
         const subTree = instance.render.call(instance.proxy);
-        patch(prevSubTree, subTree, container, instance);
+        patch(prevSubTree, subTree, container, instance, null);
         instance.subTree = subTree;
         instance.vnode.el = subTree.el;
       } else {
         const subTree = instance.render.call(instance.proxy);
 
-        patch(null, subTree, container, instance);
+        patch(null, subTree, container, instance, null);
         instance.subTree = subTree;
         instance.vnode.el = subTree.el;
         instance.isMounted = true;
