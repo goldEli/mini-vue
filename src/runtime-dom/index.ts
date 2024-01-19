@@ -33,16 +33,11 @@ function setChildrenText(el, text) {
   el.textContent = text;
 }
 
-function removeChild(container, child) {
-  container.removeChild(child);
-}
-
-function removeChildren(container, children) {
-  // children.forEach((item, idx) => {
-  //   console.log(item, idx)
-  //   removeChild(container, item)
-  // })
-  container.innerHTML = "";
+function remove(child) {
+  const parent = child.parentNode;
+  if (parent) {
+    parent.removeChild(child);
+  }
 }
 
 const renderer: any = createRenderer({
@@ -50,8 +45,7 @@ const renderer: any = createRenderer({
   patchProp,
   insert,
   setChildrenText,
-  removeChild,
-  removeChildren,
+  remove,
 });
 
 export function createApp(...args) {

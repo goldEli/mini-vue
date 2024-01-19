@@ -16,8 +16,7 @@ export function createRenderer(options) {
     patchProp: hostPatchProp,
     insert: hostInsert,
     setChildrenText: hostSetChildrenText,
-    removeChild: hostRemoveChild,
-    removeChildren: hostRemoveChildren
+    remove: hostRemove,
   } = options;
 
   function render(vnode: VNode, container, parent) {
@@ -87,14 +86,17 @@ export function createRenderer(options) {
       v2.shapeFlag & ShapeFlags.TEXT_CHILDREN
     ) {
       // 清空儿子
-      hostRemoveChildren(v1.el, v1.el.childNodes);
+      unmountChildren(v1.children);
 
-      mountText(v2, v2.el)
-      // 清空text
-      // hostSetChildrenText(v1.el, null);
-      // array append 到 container
-      // mountChild(v2.children, v2.el, parent);
+      mountText(v2, v2.el);
       return;
+    }
+  }
+
+  function unmountChildren(children) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i].el;
+      hostRemove(child);
     }
   }
 
