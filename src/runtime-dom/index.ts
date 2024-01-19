@@ -33,11 +33,16 @@ function setChildrenText(el, text) {
   el.textContent = text;
 }
 
+function removeChild(container, child) {
+  container.removeChild(child);
+}
+
 const renderer: any = createRenderer({
   createElement,
   patchProp,
   insert,
   setChildrenText,
+  removeChild,
 });
 
 export function createApp(...args) {

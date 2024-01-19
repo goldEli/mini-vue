@@ -16,6 +16,7 @@ export function createRenderer(options) {
     patchProp: hostPatchProp,
     insert: hostInsert,
     setChildrenText: hostSetChildrenText,
+    removeChild: hostRemoveChild,
   } = options;
 
   function render(vnode: VNode, container, parent) {
@@ -63,7 +64,22 @@ export function createRenderer(options) {
       v2.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
       v1.children !== v2.children
     ) {
-      hostSetChildrenText(v2.el, v2.children);
+      hostSetChildrenText(v1.el, v1.children);
+      return;
+    }
+
+    // 老的 child Text  新的 child array
+    if (
+      v1.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
+      v2.shapeFlag & ShapeFlags.ARRAY_CHILDREN
+    ) {
+      // 清空text
+      hostSetChildrenText(v1.el, null);
+      // array append 到 container
+
+      mountChild(v2.children, v2.el, parent);
+
+      return;
     }
   }
 
@@ -128,16 +144,16 @@ export function createRenderer(options) {
     if (vnode.shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       el.textContent = children;
     } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-      mountChild(vnode, el, parent);
+      mountChild(vnode.children, el, parent);
     }
 
     // container.append(el);
     hostInsert(el, container);
   }
 
-  function mountChild(vnode: VNode, container, parent) {
-    for (let i = 0; i < vnode.children.length; i++) {
-      const child = vnode.children[i];
+  function mountChild(children, container, parent) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
       patch(null, child, container, parent);
     }
   }
