@@ -11,6 +11,7 @@ export type VNode = {
   el: any;
   shapeFlag: ShapeFlags;
   emit: any;
+  key: string | number
 };
 export function createVNode(type, props?, children?) {
   const vnode: VNode = {
@@ -20,6 +21,7 @@ export function createVNode(type, props?, children?) {
     el: null,
     emit: null, // 事件处理函数
     shapeFlag: getShapeFlag(type),
+    key: props?.key
   };
 
   if (vnode.type === Fragment) {

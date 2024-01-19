@@ -76,7 +76,7 @@ export function createRenderer(options) {
       // 清空text
       hostSetChildrenText(v1.el, null);
       // array append 到 container
-      mountChild(v2.children, v2.el, parent);
+      mountChild(v2.children, container, parent);
       return;
     }
 
@@ -90,6 +90,55 @@ export function createRenderer(options) {
 
       mountText(v2, v2.el);
       return;
+    }
+
+    // 老的 child array 新的 child array
+    if (
+      v1.shapeFlag & ShapeFlags.ARRAY_CHILDREN &&
+      v2.shapeFlag & ShapeFlags.ARRAY_CHILDREN
+    ) {
+      patchChildrenArray(v1, v2, container, parent);
+    }
+  }
+
+  function patchChildrenArray(v1, v2, container, parent) {
+    let i = 0;
+    let e1 = v1.children.length - 1;
+    let e2 = v2.children.length - 1;
+
+    // 从左往右
+    while (i <= e1) {
+      const c1 = v1.children[i];
+      const c2 = v2.children[i];
+      if (
+        c1.key !== c2.key ||
+        c1.type !== c2.type ||
+        c1.shapeFlag !== c2.shapeFlag
+      ) {
+        break;
+      }
+      i++;
+    }
+
+    // 从右往左
+    while (i <= e1) {
+      const c1 = v1.children[e1];
+      const c2 = v2.children[e2];
+      if (
+        c1.key !== c2.key ||
+        c1.type !== c2.type ||
+        c1.shapeFlag !== c2.shapeFlag
+      ) {
+        break;
+      }
+      --e1;
+      --e2;
+    }
+
+    console.log({ e1, i, e2 });
+    // 添加到后面
+    if (i > e1) {
+      mountChild(v2.children?.slice(i, e2 + 1), container, parent);
     }
   }
 
@@ -206,7 +255,6 @@ export function createRenderer(options) {
       } else {
         const subTree = instance.render.call(instance.proxy);
 
-        console.log(subTree);
         patch(null, subTree, container, instance);
         instance.subTree = subTree;
         instance.vnode.el = subTree.el;
