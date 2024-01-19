@@ -37,12 +37,21 @@ function removeChild(container, child) {
   container.removeChild(child);
 }
 
+function removeChildren(container, children) {
+  // children.forEach((item, idx) => {
+  //   console.log(item, idx)
+  //   removeChild(container, item)
+  // })
+  container.innerHTML = "";
+}
+
 const renderer: any = createRenderer({
   createElement,
   patchProp,
   insert,
   setChildrenText,
   removeChild,
+  removeChildren,
 });
 
 export function createApp(...args) {

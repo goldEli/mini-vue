@@ -17,6 +17,7 @@ export function createRenderer(options) {
     insert: hostInsert,
     setChildrenText: hostSetChildrenText,
     removeChild: hostRemoveChild,
+    removeChildren: hostRemoveChildren
   } = options;
 
   function render(vnode: VNode, container, parent) {
@@ -76,9 +77,23 @@ export function createRenderer(options) {
       // 清空text
       hostSetChildrenText(v1.el, null);
       // array append 到 container
-
       mountChild(v2.children, v2.el, parent);
+      return;
+    }
 
+    // 老的 child array 新的 child text
+    if (
+      v1.shapeFlag & ShapeFlags.ARRAY_CHILDREN &&
+      v2.shapeFlag & ShapeFlags.TEXT_CHILDREN
+    ) {
+      // 清空儿子
+      hostRemoveChildren(v1.el, v1.el.childNodes);
+
+      mountText(v2, v2.el)
+      // 清空text
+      // hostSetChildrenText(v1.el, null);
+      // array append 到 container
+      // mountChild(v2.children, v2.el, parent);
       return;
     }
   }
@@ -110,14 +125,14 @@ export function createRenderer(options) {
   }
 
   function processText(v1, v2, container) {
-    mountText(v1, v2, container);
+    mountText(v2, container);
   }
 
   function processFragment(v1, v2, container, parent) {
     mountFragment(v2, container, parent);
   }
 
-  function mountText(v1, v2, container: any) {
+  function mountText(v2, container: any) {
     const textDom = document.createTextNode(v2.children);
     v2.el = textDom;
     container.appendChild(textDom);
