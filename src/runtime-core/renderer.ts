@@ -10,11 +10,12 @@ import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { createAPI } from "./createApp";
 import { VNode } from "./vnode";
 
-export function createRenderer(options: { createElement; patchProp; insert }) {
+export function createRenderer(options) {
   const {
     createElement: hostCreateElement,
     patchProp: hostPatchProp,
     insert: hostInsert,
+    setChildrenText: hostSetChildrenText,
   } = options;
 
   function render(vnode: VNode, container, parent) {
@@ -50,11 +51,23 @@ export function createRenderer(options: { createElement; patchProp; insert }) {
     v2.el = el;
     const oldProps = v1.props || EMPTY_OBJ;
     const nextProps = v2.props || EMPTY_OBJ;
+    patchChildren(v1, v2, container, parent);
     patchProps(el, oldProps, nextProps);
   }
 
+  function patchChildren(v1, v2, container, parent) {
+    console.log(v1, v2, container, parent);
+    // 老的 child Text  新的 child text
+    if (
+      v1.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
+      v2.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
+      v1.children !== v2.children
+    ) {
+      hostSetChildrenText(v2.el, v2.children);
+    }
+  }
+
   function patchProps(el, oldProps, nextProps) {
-    console.log({ oldProps, nextProps });
     if (oldProps === nextProps) {
       return;
     }

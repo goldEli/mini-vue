@@ -210,4 +210,13 @@ vue3 高度模块化，编译 运行时 dom渲染 都进行了分离。可以将
 2. 原来的props.key 的值被设置为了undefind =》 触发remove
 3. 原来的props.key 的key不存在了 =》 触发remove
 
+# update children
+
+有四种情况
+
+1. 原来的children 是 text，新children 是 array
+2. 原来的children 是 array，新children 是 text
+3. 原来的children 是 text，新children 是 text 
+4. 原来的children 是 array，新children 是 array
+
 
