@@ -215,8 +215,77 @@ vue3 高度模块化，编译 运行时 dom渲染 都进行了分离。可以将
 有四种情况
 
 1. 原来的children 是 text，新children 是 array
+  * 选清空text 然后 mountChildren
 2. 原来的children 是 array，新children 是 text
+  * unmountChildren 然后 setText
 3. 原来的children 是 text，新children 是 text 
+  * 直接setText
 4. 原来的children 是 array，新children 是 array
+  * 两端对比算法
+
+# 两端对比算法
+
+基于children经常被修改的场景，采用两端对比算法更为高效，
+先从左往右，然后从右往左对比，找到改变的区域
+
+三个指针
+prevchildren: a b c
+                  e1
+
+nextchildren: a b
+              i e2 
+
+### 尾部添加更新
+
+ab
+abc
+
+从左往右
+* i=0 e1 = 1 e2 = 2  a == a
+* i=1 e1 = 1 e2 = 2  b == b 
+* i=2 e1 = 1 e2 = 2  c 无对应 i <= e2 停止 
+从右往左
+e2 e1 对应的值不相等 不移动
+* i=2 e1 = 1 e2 = 2  
+
+i > e1 
+
+### 头部添加更新
+ab
+cab
+
+从左往右
+* i=0 e1 = 1 e2 = 2  a != c
+从右往左
+* i=0 e1 = 1 e2 = 2  b == b
+* i=0 e1 = 0 e2 = 1  a == a 
+* i=0 e1 = -1 e2 = 0 停止
+
+e1 < 0
+
+
+### 删除尾部
+
+abc
+ab
+
+从左往右
+* i=0 e1 = 2 e2 = 1  a == a
+* i=1 e1 = 2 e2 = 1  b == b i <= e2 停止
+
+e1 > i && i === e2
+
+### 删除头部
+abc
+bc
+
+从左往右
+* i=0 e1 = 2 e2 = 1  a != b
+从右往左
+* i=0 e1 = 2 e2 = 1  c == c
+* i=0 e1 = 1 e2 = 0  b == b i <= e2 停止
+
+e1 > i && i === e2 && i === 0
+
 
 
