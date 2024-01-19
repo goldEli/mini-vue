@@ -138,8 +138,13 @@ export function createRenderer(options) {
     console.log({ e1, i, e2 });
     // 添加到后面
     if (i > e1) {
-      mountChild(v2.children?.slice(i, e2 + 1), container, parent);
+      // mountChild(v2.children?.slice(i, e2 + 1), container, parent);
+      while (i <= e2) {
+        patch(null, v2.children[i], container, parent);
+        ++i;
+      }
     }
+    // 添加到前面
   }
 
   function unmountChildren(children) {

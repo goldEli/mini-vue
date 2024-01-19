@@ -25,12 +25,8 @@ function patchProp(el, key, prevVal, nextVal) {
   }
 }
 
-function insert(el, container, position) {
-  let p = position;
-  if (p === undefined) {
-    p = container.children.length - 1 ?? 0;
-  }
-  container.append(el);
+function insert(el, container, anchor) {
+  container.insertBefore(el, anchor || null);
 }
 
 function setChildrenText(el, text) {
