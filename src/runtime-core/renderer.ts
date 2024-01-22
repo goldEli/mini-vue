@@ -136,12 +136,11 @@ export function createRenderer(options) {
     }
 
     console.log({ e1, i, e2 });
-    // 后面新增
+    // 后面新增 后面新增
     if (i > e1) {
-      const anchor = v1.children[i].el
-      debugger
+      const anchor = v1.children[i] ? v1.children[i].el : null
       while (i <= e2) {
-        patch(null, v2.children[i], container, parent, anchor);
+        patch(null, v2.children[i], v2.el, container, anchor);
         ++i;
       }
     }

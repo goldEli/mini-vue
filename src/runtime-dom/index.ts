@@ -26,7 +26,6 @@ function patchProp(el, key, prevVal, nextVal) {
 }
 
 function insert(el, container, anchor) {
-  debugger
   container.insertBefore(el, anchor || null);
 }
 
