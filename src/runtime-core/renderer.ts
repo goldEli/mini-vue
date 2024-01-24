@@ -38,25 +38,29 @@ export function createRenderer(options) {
   function processElement(v1, v2, container, parent, anchor) {
     // update
     if (v1) {
-      patchElement(v1, v2, container, parent);
+      patchElement(v1, v2, container, parent, anchor);
     } else {
       mountElement(v2, container, parent, anchor);
     }
   }
 
+  function isSaveNodeType(v1, v2) {
+    return v1.type === v2.type && v1.key === v2.key;
+  }
+
   // update element
-  function patchElement(v1, v2, container, parent) {
+  function patchElement(v1, v2, container, parent, anchor) {
     console.log("patchElement", v1, v2, container, parent);
 
     const el = v1.el;
     v2.el = el;
     const oldProps = v1.props || EMPTY_OBJ;
     const nextProps = v2.props || EMPTY_OBJ;
-    patchChildren(v1, v2, container, parent);
+    patchChildren(v1, v2, el, parent, anchor);
     patchProps(el, oldProps, nextProps);
   }
 
-  function patchChildren(v1, v2, container, parent) {
+  function patchChildren(v1, v2, container, parent, anchor) {
     console.log(v1, v2, container, parent);
     // 老的 child Text  新的 child text
     if (
@@ -97,38 +101,34 @@ export function createRenderer(options) {
       v1.shapeFlag & ShapeFlags.ARRAY_CHILDREN &&
       v2.shapeFlag & ShapeFlags.ARRAY_CHILDREN
     ) {
-      patchChildrenArray(v1, v2, container, parent);
+      patchChildrenArray(v1, v2, container, parent, anchor);
     }
   }
 
-  function patchChildrenArray(v1, v2, container, parent) {
+  function patchChildrenArray(v1, v2, container, parent, anchor) {
     let i = 0;
     let e1 = v1.children.length - 1;
     let e2 = v2.children.length - 1;
 
     // 从左往右
-    while (i <= e1) {
+    while (i <= e1 && i <= e2) {
       const c1 = v1.children[i];
       const c2 = v2.children[i];
-      if (
-        c1.key !== c2.key ||
-        c1.type !== c2.type ||
-        c1.shapeFlag !== c2.shapeFlag
-      ) {
+      if (isSaveNodeType(c1, c2)) {
+        patch(c1, c2, container, parent, anchor);
+      } else {
         break;
       }
       i++;
     }
 
     // 从右往左
-    while (i <= e1) {
+    while (i <= e1 && i <= e2) {
       const c1 = v1.children[e1];
       const c2 = v2.children[e2];
-      if (
-        c1.key !== c2.key ||
-        c1.type !== c2.type ||
-        c1.shapeFlag !== c2.shapeFlag
-      ) {
+      if (isSaveNodeType(c1, c2)) {
+        patch(c1, c2, container, parent, anchor);
+      } else {
         break;
       }
       --e1;
@@ -138,12 +138,19 @@ export function createRenderer(options) {
     console.log({ e1, i, e2 });
     // 后面新增 后面新增
     if (i > e1) {
-      const anchor = v1.children[i] ? v1.children[i].el : null
+      const anchor = v1.children[i] ? v1.children[i].el : null;
       while (i <= e2) {
-        patch(null, v2.children[i], v2.el, container, anchor);
+        patch(null, v2.children[i], container, parent, anchor);
+        ++i;
+      }
+    } else {
+      while (i <= e1) {
+        // patch(null, v2.children[i], v2.el, container, anchor);
+        hostRemove(v1.children[i].el);
         ++i;
       }
     }
+
     // 前面新增
     // if (i > e1) {
     //   while (i <= e2) {
@@ -151,7 +158,6 @@ export function createRenderer(options) {
     //     ++i;
     //   }
     // }
-
   }
 
   function unmountChildren(children) {
