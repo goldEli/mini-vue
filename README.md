@@ -303,4 +303,7 @@ a,b,(d,c,y,e),f,g
    1. 添加
    2. 移动
 
+newIndexToOldIndexMap=[4,3,0,5]
+最长递归子序列下标  3 5 => [1, 3] 
+
 
