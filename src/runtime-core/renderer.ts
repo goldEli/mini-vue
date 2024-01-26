@@ -1,6 +1,7 @@
 import { effect } from "../reactivity/effect";
 import { EMPTY_OBJ } from "../shared";
 import { ShapeFlags } from "../shared/ShapeFlags";
+import { getSequence } from "../shared/getSequence";
 import {
   ComponentInstance,
   createComponentInstance,
@@ -111,6 +112,8 @@ export function createRenderer(options) {
     let e2 = v2.children.length - 1;
     const c1 = v1.children;
     const c2 = v2.children;
+    const l1 = c1.length;
+    const l2 = c2.length;
 
     // 从左往右
     while (i <= e1 && i <= e2) {
@@ -163,8 +166,15 @@ export function createRenderer(options) {
       const toBePatched = e2 - s2 + 1;
       // 已处理的长度
       let patched = 0;
-      // 节点对应的index
+      // 新节点key对应的index
       const keyToNewIndexMap = new Map();
+      const newIndexToOldIndexMap = new Array(toBePatched);
+      let moved = false;
+      let maxNewIndexSoFar = 0;
+      for (let i = 0; i < toBePatched; i++) {
+        newIndexToOldIndexMap[i] = 0;
+      }
+
       for (let i = s2; i <= e2; i++) {
         const nextChild = c2[i];
         keyToNewIndexMap.set(nextChild.key, i);
@@ -193,8 +203,34 @@ export function createRenderer(options) {
         if (newIndex === undefined) {
           hostRemove(prevChild.el);
         } else {
-          patch(prevChild, c2[newIndex], container, parent, anchor);
+          if (newIndex >= maxNewIndexSoFar) {
+            maxNewIndexSoFar = newIndex;
+          } else {
+            moved = true;
+          }
+          newIndexToOldIndexMap[newIndex - s2] = i + 1;
+          patch(prevChild, c2[newIndex], container, parent, null);
           patched++;
+        }
+      }
+      const increasingNewIndexSequence = moved
+        ? getSequence(newIndexToOldIndexMap)
+        : [];
+      let j = increasingNewIndexSequence.length - 1;
+
+      for (let i = toBePatched - 1; i >= 0; i--) {
+        const nextIndex = i + s2;
+        const nextChild = c2[nextIndex];
+        const anchor = nextIndex + 1 < l2 ? c2[nextIndex + 1].el : null;
+
+        if (newIndexToOldIndexMap[i] === 0) {
+          patch(null, nextChild, container, parent, anchor);
+        } else if (moved) {
+          if (j < 0 || i !== increasingNewIndexSequence[j]) {
+            hostInsert(nextChild.el, container, anchor);
+          } else {
+            j--;
+          }
         }
       }
     }
