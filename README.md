@@ -307,3 +307,11 @@ newIndexToOldIndexMap=[4,3,0,5]
 最长递归子序列下标  3 5 => [1, 3] 
 
 
+# 组件更新
+
+update component => trigger effect => newSubTree 和 oldSubTree 进行patch
+
+1. effect 返回的 run 方法存到instance.update
+2. componentUpdate trigger  instance.update, 修改 instance 的props，生成新的 subTree
+3. patch 对比 newSubTree 和 oldSubTree
+

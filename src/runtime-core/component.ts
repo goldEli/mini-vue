@@ -18,6 +18,8 @@ export type ComponentInstance = {
   parent?: any
   subTree?: any;
   isMounted?: boolean
+  next?: any; 
+  update?: any; // 用于实现更新
 };
 
 export function createComponentInstance(vnode: VNode , parent) {

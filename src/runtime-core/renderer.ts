@@ -7,7 +7,10 @@ import {
   createComponentInstance,
   setupComponent,
 } from "./component";
-import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
+import {
+  PublicInstanceProxyHandlers,
+  shouldUpdateComponent,
+} from "./componentPublicInstance";
 import { createAPI } from "./createApp";
 import { VNode } from "./vnode";
 
@@ -51,7 +54,7 @@ export function createRenderer(options) {
 
   // update element
   function patchElement(v1, v2, container, parent, anchor) {
-    console.log("patchElement", v1, v2, container, parent);
+    // console.log("patchElement", v1, v2, container, parent);
 
     const el = v1.el;
     v2.el = el;
@@ -62,14 +65,14 @@ export function createRenderer(options) {
   }
 
   function patchChildren(v1, v2, container, parent, anchor) {
-    console.log(v1, v2, container, parent);
+    // console.log(v1, v2, container, parent);
     // 老的 child Text  新的 child text
     if (
       v1.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
       v2.shapeFlag & ShapeFlags.TEXT_CHILDREN &&
       v1.children !== v2.children
     ) {
-      hostSetChildrenText(v1.el, v1.children);
+      hostSetChildrenText(v1.el, v2.children);
       return;
     }
 
@@ -327,12 +330,32 @@ export function createRenderer(options) {
   }
 
   function processComponent(v1: VNode | null, v2: VNode, container, parent) {
-    mountComponent(v2, container, parent);
+    if (v1) {
+      updateComponent(v1, v2, container, parent);
+    } else {
+      mountComponent(v2, container, parent);
+    }
+  }
+
+  function updateComponent(v1, v2, container, parent) {
+    const instance = v1.component;
+    v2.component = instance;
+    if (shouldUpdateComponent(v1, v2)) {
+      instance.next = v2;
+      instance.update();
+    } else {
+      v2.el = v1.el;
+      instance.vnode = v2;
+    }
+    // const next = parent.next;
+    // next & next();
+    // console.log("update component");
   }
 
   function mountComponent(vnode: VNode, container, parent) {
     // create component instance
     const instance = createComponentInstance(vnode, parent);
+    vnode.component = instance;
 
     instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
 
@@ -344,10 +367,16 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance: ComponentInstance, container) {
-    effect(() => {
+    instance.update = effect(() => {
+      console.log("effect", instance);
       if (instance.isMounted) {
         // update
-        console.log("update");
+        // console.log("update");
+        const { next, vnode } = instance;
+        if (next) {
+          next.el = vnode.el;
+          updateComponentPreRender(instance, next);
+        }
 
         const prevSubTree = instance.subTree;
         const subTree = instance.render.call(instance.proxy);
@@ -368,4 +397,11 @@ export function createRenderer(options) {
   return {
     createApp: createAPI(render),
   };
+}
+
+function updateComponentPreRender(instance, nextVNode) {
+  instance.vnode = nextVNode;
+  instance.next = null;
+
+  instance.props = nextVNode.props;
 }

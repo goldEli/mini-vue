@@ -4,6 +4,7 @@ import { hasOwn } from "../shared/index";
 const publicPropertiesMap = {
   $el: (instance) => instance.vnode.el,
   $slots: (instance) => instance.slots,
+  $props: (instance) => instance.props,
 };
 
 export const PublicInstanceProxyHandlers = {
@@ -14,7 +15,7 @@ export const PublicInstanceProxyHandlers = {
       const ret = props[key];
       return ret;
     } else if (hasOwn(setupState, key)) {
-      const ret = setupState[key]
+      const ret = setupState[key];
       return ret;
     }
 
@@ -24,4 +25,16 @@ export const PublicInstanceProxyHandlers = {
     }
     return undefined;
   },
+};
+
+export const shouldUpdateComponent = (prevVNode, nextVNode) => {
+  const { props: prevProps } = prevVNode;
+  const { props: nextProps } = nextVNode;
+
+  for (const key in nextProps) {
+    if (nextProps[key] !== prevProps[key]) {
+      return true
+    }
+  }
+  return false
 };
