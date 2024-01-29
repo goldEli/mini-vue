@@ -315,3 +315,8 @@ update component => trigger effect => newSubTree 和 oldSubTree 进行patch
 2. componentUpdate trigger  instance.update, 修改 instance 的props，生成新的 subTree
 3. patch 对比 newSubTree 和 oldSubTree
 
+# nextTick
+
+1. 业务场景中，可能需要多次修改data, 会触发多次更新，造成性能问题
+2. 对于页面的呈现，我们只需要等data修改完毕后再进行更新，不管修改多少次
+3. 同步代码结束后，在微任务中执行更新，实现异步更新

@@ -12,6 +12,7 @@ import {
   shouldUpdateComponent,
 } from "./componentPublicInstance";
 import { createAPI } from "./createApp";
+import { queueJobs } from "./scheduler";
 import { VNode } from "./vnode";
 
 export function createRenderer(options) {
@@ -367,31 +368,38 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance: ComponentInstance, container) {
-    instance.update = effect(() => {
-      console.log("effect", instance);
-      if (instance.isMounted) {
-        // update
-        // console.log("update");
-        const { next, vnode } = instance;
-        if (next) {
-          next.el = vnode.el;
-          updateComponentPreRender(instance, next);
+    instance.update = effect(
+      () => {
+        console.log("effect", instance);
+        if (instance.isMounted) {
+          // update
+          // console.log("update");
+          const { next, vnode } = instance;
+          if (next) {
+            next.el = vnode.el;
+            updateComponentPreRender(instance, next);
+          }
+
+          const prevSubTree = instance.subTree;
+          const subTree = instance.render.call(instance.proxy);
+          patch(prevSubTree, subTree, container, instance, null);
+          instance.subTree = subTree;
+          instance.vnode.el = subTree.el;
+        } else {
+          const subTree = instance.render.call(instance.proxy);
+
+          patch(null, subTree, container, instance, null);
+          instance.subTree = subTree;
+          instance.vnode.el = subTree.el;
+          instance.isMounted = true;
         }
-
-        const prevSubTree = instance.subTree;
-        const subTree = instance.render.call(instance.proxy);
-        patch(prevSubTree, subTree, container, instance, null);
-        instance.subTree = subTree;
-        instance.vnode.el = subTree.el;
-      } else {
-        const subTree = instance.render.call(instance.proxy);
-
-        patch(null, subTree, container, instance, null);
-        instance.subTree = subTree;
-        instance.vnode.el = subTree.el;
-        instance.isMounted = true;
+      },
+      {
+        scheduler: () => {
+          queueJobs(instance.update);
+        },
       }
-    });
+    );
   }
 
   return {

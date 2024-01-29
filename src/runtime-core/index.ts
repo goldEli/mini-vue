@@ -1,3 +1,4 @@
+export { nextTick } from "./scheduler";
 export { createTextVNode } from "./vnode";
 export { createRenderer } from "./renderer";
 export { h } from "./h";
