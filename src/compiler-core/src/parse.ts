@@ -19,10 +19,33 @@ function parseChildren(context: Context) {
   if (context.source.startsWith(interpolationStart)) {
     // 处理插值
     node = parseInterpolation(context);
+  } else if (context.source.startsWith("<")) {
+    // 处理element
+    node = parseElement(context);
   }
   nodes.push(node);
 
   return nodes;
+}
+
+function parseElement(context: Context) {
+  const tag = getTag(context);
+
+  const lastIndex = context.source.indexOf(`</${tag}>`);
+  advanceBy(context, lastIndex + tag.length + 3)
+  return {
+    type: NodeTypes.ELEMENT,
+    tag,
+  };
+}
+
+function getTag(context: Context) {
+  const reg = /<([a-z]*)>/i;
+  const match = context.source.match(reg);
+  if (match) {
+    return match[1];
+  }
+  return "";
 }
 
 function createRoot(children) {
