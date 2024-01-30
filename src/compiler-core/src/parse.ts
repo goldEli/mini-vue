@@ -1,29 +1,47 @@
 import { NodeTypes } from "./ast";
 
-export function baseParse(source) {
-  const root = createRoot(source);
+interface Context {
+  source: string;
+}
+
+export function baseParse(source: string) {
+  const context = createParserContext(source);
+  const root = createRoot(parseChildren(context));
   return root;
 }
 
 const interpolationStart = "{{";
 const interpolationEnd = "}}";
 
-function createRoot(source) {
-  const child = parseChild(source);
+function parseChildren(context: Context) {
+  const nodes: any[] = [];
+  let node;
+  if (context.source.startsWith(interpolationStart)) {
+    // 处理插值
+    node = parseInterpolation(context);
+  }
+  nodes.push(node);
+
+  return nodes;
+}
+
+function createRoot(children) {
   return {
     type: NodeTypes.ROOT,
-    children: [child],
+    children,
   };
 }
-function parseChild(source: string) {
-  let child;
-  if (source.startsWith(interpolationStart)) {
-    child = parseInterpolation(advanceBy(source, interpolationStart.length));
-  }
-  return child;
-}
-function parseInterpolation(source: any) {
-  const content = source.slice(0, -interpolationEnd.length);
+
+function parseInterpolation(context: Context) {
+  advanceBy(context, interpolationStart.length);
+  const closeIndex = context.source.indexOf(interpolationEnd);
+
+  const rawContent = context.source.slice(0, closeIndex);
+  const rawContentLength = rawContent.length;
+  const content = rawContent.trim();
+
+  advanceBy(context, rawContentLength + interpolationEnd.length);
+
   return {
     type: NodeTypes.INTERPOLATION,
     content: {
@@ -33,6 +51,11 @@ function parseInterpolation(source: any) {
   };
 }
 
-function advanceBy(source, length) {
-  return source.slice(length);
+function advanceBy(context: Context, length) {
+  context.source = context.source.slice(length);
+}
+function createParserContext(source: string) {
+  return {
+    source,
+  };
 }
