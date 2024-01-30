@@ -320,3 +320,15 @@ update component => trigger effect => newSubTree 和 oldSubTree 进行patch
 1. 业务场景中，可能需要多次修改data, 会触发多次更新，造成性能问题
 2. 对于页面的呈现，我们只需要等data修改完毕后再进行更新，不管修改多少次
 3. 同步代码结束后，在微任务中执行更新，实现异步更新
+
+# compiler
+
+1. 解析模板，生成ast语法树
+2. transform 遍历ast语法树，对语法树进行改造，得到新的ast语法树
+3. generate 遍历ast语法树，生成render函数
+
+## parse interpolation
+
+```
+{{message}}
+```
