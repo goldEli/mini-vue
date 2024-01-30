@@ -47,13 +47,19 @@ function parseText(context: Context) {
     const idx = context.source.indexOf("<");
     lastIndex = lastIndex < idx ? lastIndex : idx;
   }
-  const content = context.source.slice(0, lastIndex);
-  advanceBy(context, content.length)
+  const content = parseTextData(context, lastIndex);
+  advanceBy(context, content.length);
 
   return {
     type: NodeTypes.TEXT,
     content,
   };
+}
+
+function parseTextData(context: Context, length: number) {
+  const content = context.source.slice(0, length);
+  advanceBy(context, length);
+  return content;
 }
 
 function parseElement(context: Context) {
@@ -101,11 +107,10 @@ function parseInterpolation(context: Context) {
   advanceBy(context, interpolationStart.length);
   const closeIndex = context.source.indexOf(interpolationEnd);
 
-  const rawContent = context.source.slice(0, closeIndex);
-  const rawContentLength = rawContent.length;
+  const rawContent = parseTextData(context, closeIndex);
   const content = rawContent.trim();
 
-  advanceBy(context, rawContentLength + interpolationEnd.length);
+  advanceBy(context, interpolationEnd.length);
 
   return {
     type: NodeTypes.INTERPOLATION,
