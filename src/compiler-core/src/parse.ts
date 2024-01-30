@@ -4,6 +4,11 @@ interface Context {
   source: string;
 }
 
+const enum TagType {
+  Start,
+  End,
+}
+
 export function baseParse(source: string) {
   const context = createParserContext(source);
   const root = createRoot(parseChildren(context));
@@ -15,13 +20,16 @@ const interpolationEnd = "}}";
 
 function parseChildren(context: Context) {
   const nodes: any[] = [];
+  const s = context.source;
   let node;
-  if (context.source.startsWith(interpolationStart)) {
+  if (s.startsWith(interpolationStart)) {
     // 处理插值
     node = parseInterpolation(context);
-  } else if (context.source.startsWith("<")) {
-    // 处理element
-    node = parseElement(context);
+  } else if (s.startsWith("<")) {
+    if (/[a-z]/i.test(s[1])) {
+      // 处理element
+      node = parseElement(context);
+    }
   }
   nodes.push(node);
 
@@ -29,10 +37,18 @@ function parseChildren(context: Context) {
 }
 
 function parseElement(context: Context) {
-  const tag = getTag(context);
+  const element = parseTag(context, TagType.Start);
+  parseTag(context, TagType.End);
+  return element;
+}
 
-  const lastIndex = context.source.indexOf(`</${tag}>`);
-  advanceBy(context, lastIndex + tag.length + 3)
+function parseTag(context: Context, type: TagType) {
+  const { tag, raw } = getTag(context);
+
+  advanceBy(context, raw.length); // 跳过标签名和标签结束符
+
+  if (type === TagType.End) return;
+
   return {
     type: NodeTypes.ELEMENT,
     tag,
@@ -40,12 +56,18 @@ function parseElement(context: Context) {
 }
 
 function getTag(context: Context) {
-  const reg = /<([a-z]*)>/i;
+  const reg = /<\/?([a-z]*)>/i;
   const match = context.source.match(reg);
   if (match) {
-    return match[1];
+    return {
+      tag: match[1],
+      raw: match[0],
+    };
   }
-  return "";
+  return {
+    tag: "",
+    raw: "",
+  };
 }
 
 function createRoot(children) {
