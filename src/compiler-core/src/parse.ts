@@ -30,10 +30,30 @@ function parseChildren(context: Context) {
       // 处理element
       node = parseElement(context);
     }
+  } else {
+    node = parseText(context);
   }
   nodes.push(node);
 
   return nodes;
+}
+function parseText(context: Context) {
+  let lastIndex = context.source.length;
+  if (context.source.indexOf(interpolationStart) !== -1) {
+    lastIndex = context.source.indexOf(interpolationStart);
+  }
+
+  if (context.source.indexOf("<") !== -1) {
+    const idx = context.source.indexOf("<");
+    lastIndex = lastIndex < idx ? lastIndex : idx;
+  }
+  const content = context.source.slice(0, lastIndex);
+  advanceBy(context, content.length)
+
+  return {
+    type: NodeTypes.TEXT,
+    content,
+  };
 }
 
 function parseElement(context: Context) {

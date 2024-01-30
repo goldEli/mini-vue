@@ -26,4 +26,34 @@ describe("Parse", () => {
       });
     });
   });
+
+  describe('text', () => {
+    it('simple text', () => {
+      const ast = baseParse("message");
+
+      expect(ast.children[0]).toStrictEqual({
+        type: NodeTypes.TEXT,
+        content: "message",
+      });
+        
+    }); 
+    it('simple text with interpolation', () => {
+      const ast = baseParse("message{{count}}");
+
+      expect(ast.children[0]).toStrictEqual({
+        type: NodeTypes.TEXT,
+        content: "message",
+      });
+        
+    }); 
+    it('simple text with element', () => {
+      const ast = baseParse("message<div></div>");
+
+      expect(ast.children[0]).toStrictEqual({
+        type: NodeTypes.TEXT,
+        content: "message",
+      });
+        
+    }); 
+  });
 });

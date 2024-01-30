@@ -335,4 +335,12 @@ update component => trigger effect => newSubTree 和 oldSubTree 进行patch
 
 ## parse element
 
+```
+<div></div>
+```
+
 ## parse text
+
+```
+message
+```
