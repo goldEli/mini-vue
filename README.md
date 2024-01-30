@@ -323,9 +323,31 @@ update component => trigger effect => newSubTree 和 oldSubTree 进行patch
 
 # compiler
 
+字符串 -》 render函数
+
+字符串很难进行遍历以及简历关系，所以需要将字符串转换成语法树, 然后再通过语法树转换成render函数
+
 1. 解析模板，生成ast语法树
 2. transform 遍历ast语法树，对语法树进行改造，得到新的ast语法树
 3. generate 遍历ast语法树，生成render函数
+
+
+例子：
+
+```text
+<div>hi,{{message}}</div>
+
+
+状态机 --- 遇到<符号 --> parseElement ----> parseTag -----> 状态机 
+       ----遇到\{\{符号----> parseInterpolation ----> 状态机 
+       ---- 遇到非其他两种情况 ---> parseText -------> 状态机
+
+root 
+  - element
+    - children
+      - text
+      - parseInterpolation
+```
 
 ## parse interpolation
 
