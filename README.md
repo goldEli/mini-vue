@@ -366,3 +366,8 @@ root
 ```
 message
 ```
+
+# transform 
+
+* 遍历节点
+* 通过插件机制去修改ast语法树
