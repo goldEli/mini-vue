@@ -1,11 +1,10 @@
-
 interface Options {
-  plugins?: any[];
+  nodeTransforms?: any[];
 }
 
 interface Context {
   ast: any;
-  plugins: Options["plugins"];
+  nodeTransforms: Options["nodeTransforms"];
 }
 
 export function transform(ast, options: Options = {}) {
@@ -14,17 +13,17 @@ export function transform(ast, options: Options = {}) {
 }
 
 function createContext(ast, options: Options = {}) {
-  const plugins = options.plugins || [];
+  const nodeTransforms = options.nodeTransforms || [];
   return {
     ast,
-    plugins,
+    nodeTransforms,
   };
 }
 
 function traverseNode(node, context: Context) {
-  context?.plugins?.forEach((plugin) => {
+  context?.nodeTransforms?.forEach((transform) => {
     // 遍历插件列表
-    plugin(node);
+    transform(node);
   });
   traverseChildren(node, context);
 }
@@ -32,7 +31,7 @@ function traverseNode(node, context: Context) {
 function traverseChildren(node, context: Context) {
   const children = node.children || [];
   for (let i = 0; i < children.length; i++) {
-    const child = children[i];
-    traverseNode(child, context); // 递归遍历子节点
+    const node = children[i];
+    traverseNode(node, context); // 递归遍历子节点
   }
 }
