@@ -371,3 +371,16 @@ message
 
 * 遍历节点
 * 通过插件机制去修改ast语法树
+
+## 处理 string 类型
+
+
+```
+Hello World
+
+=> 
+
+export function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return "Hello World"
+}
+```

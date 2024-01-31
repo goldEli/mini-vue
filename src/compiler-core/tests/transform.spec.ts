@@ -3,7 +3,7 @@ import { baseParse } from "../src/parse";
 import { transform } from "../src/transform";
 
 describe("transform", () => {
-  it.only("happy path", () => {
+  it("happy path", () => {
     const ast = baseParse("<div>hi,{{message}}</div>");
 
     const plugin = (node) => {

@@ -10,6 +10,11 @@ interface Context {
 export function transform(ast, options: Options = {}) {
   const context = createContext(ast, options);
   traverseNode(ast, context);
+  createRootCodegen(ast);
+}
+
+function createRootCodegen(root) {
+    root.codegenNode = root.children[0];
 }
 
 function createContext(ast, options: Options = {}) {
