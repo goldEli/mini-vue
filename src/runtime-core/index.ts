@@ -5,3 +5,5 @@ export { h } from "./h";
 export { renderSlots } from "./helpers/renderSlots";
 export { getCurrentInstance, registerCompileFunction } from "./component";
 export { provide, inject } from "./apiInject";
+
+export * from "../reactivity/index";
