@@ -41,20 +41,21 @@ function traverseNode(node, context: Context) {
     // 遍历插件列表
     transform(node);
   });
-  traverseChildren(node, context);
-}
-
-function traverseChildren(node, context: Context) {
-  const children = node.children || [];
 
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
       context.helper(helperMapNames[TO_DISPLAY_STRING]);
       break;
-
+    case NodeTypes.ROOT:
+    case NodeTypes.ELEMENT:
+      traverseChildren(node, context);
     default:
       break;
   }
+}
+
+function traverseChildren(node, context: Context) {
+  const children = node.children || [];
 
   for (let i = 0; i < children.length; i++) {
     const node = children[i];

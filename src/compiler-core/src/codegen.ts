@@ -47,6 +47,9 @@ function genNode(node, context) {
     case NodeTypes.INTERPOLATION:
       genInterpolation(node, context);
       break;
+    case NodeTypes.SIMPLE_EXPRESSION:
+      genSimpleExpression(node, context);
+      break;
     default:
       break;
   }
@@ -56,9 +59,15 @@ function genText(node, context) {
   context.push(`'${node.content}'`);
 }
 
+function genSimpleExpression(node, context) {
+  context.push(`${node.content}`);
+}
+
 function genInterpolation(node, context) {
-  const n = node.content;
-  context.push(`_${helperMapNames[TO_DISPLAY_STRING]}(${n.content})`);
+  context.push(`${context.helper(TO_DISPLAY_STRING)}(`);
+  genNode(node.content, context);
+
+  context.push(")");
 }
 
 function createContext(ast) {
@@ -67,6 +76,9 @@ function createContext(ast) {
     code: "",
     push(source) {
       context.code += source;
+    },
+    helper(key) {
+      return `_${helperMapNames[key]}`;
     },
   };
   return context;
