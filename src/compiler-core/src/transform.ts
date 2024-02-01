@@ -1,6 +1,6 @@
 import { NodeTypes } from "./ast";
 import {
-  CREATE_ELEMENT_BLOCK,
+  CREATE_ELEMENT_VNODE,
   TO_DISPLAY_STRING,
   helperMapNames,
 } from "./runtimeHelpers";
@@ -43,7 +43,7 @@ function createContext(ast, options: Options = {}) {
 function traverseNode(node, context: Context) {
   context?.nodeTransforms?.forEach((transform) => {
     // 遍历插件列表
-    transform(node);
+    transform(node, context);
   });
 
   switch (node.type) {
@@ -53,9 +53,9 @@ function traverseNode(node, context: Context) {
     case NodeTypes.ROOT:
     case NodeTypes.ELEMENT:
       traverseChildren(node, context);
-      if (NodeTypes.ELEMENT === node.type) {
-        context.helper(helperMapNames[CREATE_ELEMENT_BLOCK]);
-      }
+      break;
+    // case NodeTypes.COMPOUND:
+    //   traverseChildren(node, context);
     default:
       break;
   }

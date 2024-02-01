@@ -1,6 +1,6 @@
 import { NodeTypes } from "./ast";
 import {
-  CREATE_ELEMENT_BLOCK,
+  CREATE_ELEMENT_VNODE,
   TO_DISPLAY_STRING,
   helperMapNames,
 } from "./runtimeHelpers";
@@ -64,7 +64,7 @@ function genNode(node, context) {
 
 function genElement(node, context) {
   const { tag, children } = node;
-  context.push(`${context.helper(CREATE_ELEMENT_BLOCK)}(`);
+  context.push(`${context.helper(CREATE_ELEMENT_VNODE)}(`);
   context.push(`'${tag}'`);
   context.push(")");
 }

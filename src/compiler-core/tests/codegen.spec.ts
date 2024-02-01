@@ -27,11 +27,12 @@ describe('codegen', () => {
     });
 
 
-    it('element', () => {
-       const ast = baseParse("<div></div>") 
+    it('compound', () => {
+       const ast = baseParse("<div>hi,{{message}}</div>") 
        transform(ast, {
          nodeTransforms: [transformElement]
        })
+       console.log(ast)
        const {code} = generate(ast)
 
        expect(code).toMatchSnapshot(); // 生成快照并比较
