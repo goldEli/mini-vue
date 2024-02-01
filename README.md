@@ -412,7 +412,11 @@ vue -> compiler-dom -> complier-core
 * 软链接节约磁盘空间
 * 非扁平结构，nodemodule 展示更清晰, 也可以规避某些包冲突问题
 
-## vitest
+1. create pnpm-workspace.yaml
+2. 每个包都需要一个 package.json pnpm init -y
+  * 执行项目安装 pnpm i @miao-vue/shared --filter @miao-vue/reactivity
+  * 修改tsconfig.json, paths 
+
 
 
  
