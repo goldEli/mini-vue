@@ -41,9 +41,13 @@ function createContext(ast, options: Options = {}) {
 }
 
 function traverseNode(node, context: Context) {
+  let exitFns:any[] = []
   context?.nodeTransforms?.forEach((transform) => {
     // 遍历插件列表
-    transform(node, context);
+    const exit = transform(node, context);
+    if (exit) {
+      exitFns.push(exit);
+    }
   });
 
   switch (node.type) {
@@ -54,10 +58,13 @@ function traverseNode(node, context: Context) {
     case NodeTypes.ELEMENT:
       traverseChildren(node, context);
       break;
-    // case NodeTypes.COMPOUND:
-    //   traverseChildren(node, context);
     default:
       break;
+  }
+
+  let len = exitFns.length ?? 0
+  while(len--) {
+    exitFns[len](node, context);
   }
 }
 

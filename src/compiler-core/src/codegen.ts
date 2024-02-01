@@ -1,3 +1,4 @@
+import { isString } from "../../shared";
 import { NodeTypes } from "./ast";
 import {
   CREATE_ELEMENT_VNODE,
@@ -57,24 +58,50 @@ function genNode(node, context) {
     case NodeTypes.ELEMENT:
       genElement(node, context);
       break;
+    case NodeTypes.COMPOUND:
+      genCompound(node, context);
+      break;
     default:
       break;
   }
 }
 
+function genCompound(node, context) {
+  const { children } = node;
+  for (let i = 0; i < children.length; ++i) {
+    const child = children[i];
+
+    if (isString(child)) {
+      genStr(child, context);
+    } else {
+      genNode(children[i], context);
+    }
+  }
+}
+
 function genElement(node, context) {
-  const { tag, children } = node;
+  const { tag, children, props } = node;
   context.push(`${context.helper(CREATE_ELEMENT_VNODE)}(`);
-  context.push(`'${tag}', null,`);
+  const str = genNullList([`'${tag}'`, props]).join(", ");
+  context.push(str);
+  context.push(", ");
   for (let i = 0; i < children.length; i++) {
-    const child = children[i]
+    const child = children[i];
     genNode(child, context);
   }
   context.push(")");
 }
 
+const genNullList = (list) => {
+  return list.map((item) => item || "null");
+};
+
 function genText(node, context) {
   context.push(`'${node.content}'`);
+}
+
+function genStr(str, context) {
+  context.push(`${str}`);
 }
 
 function genSimpleExpression(node, context) {
