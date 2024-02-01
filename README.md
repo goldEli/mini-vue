@@ -384,3 +384,14 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
   return "Hello World"
 }
 ```
+
+# 模块依赖
+
+```
+                compiler-sfc 
+               |           |
+               v           v
+vue -> compiler-dom -> complier-core
+
+    -> runtime-dom -> runtime-core -> reactivity
+```

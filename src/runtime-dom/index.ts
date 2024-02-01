@@ -1,4 +1,6 @@
+export { createElementVNode } from "../runtime-core";
 import { createRenderer } from "../runtime-core/renderer";
+export { toDisplayString } from "../shared";
 
 function createElement(type) {
   return document.createElement(type);

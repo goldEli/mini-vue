@@ -36,10 +36,10 @@ function genFunctionPreamble(ast, context) {
 
   if (helpers.length > 0) {
     const helpersString = ast.helpers
-      .map((helper) => `${helper} as _${helper}`)
+      .map((helper) => `${helper}: _${helper}`)
       ?.join(", ");
 
-    context.push(`const { ${helpersString} } = '${VueBinging}'`);
+    context.push(`const { ${helpersString} } = ${VueBinging}`);
     context.push(`\n`);
   }
 }

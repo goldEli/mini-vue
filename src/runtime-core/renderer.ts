@@ -381,12 +381,12 @@ export function createRenderer(options) {
           }
 
           const prevSubTree = instance.subTree;
-          const subTree = instance.render.call(instance.proxy);
+          const subTree = instance.render.call(instance.proxy, instance.proxy);
           patch(prevSubTree, subTree, container, instance, null);
           instance.subTree = subTree;
           instance.vnode.el = subTree.el;
         } else {
-          const subTree = instance.render.call(instance.proxy);
+          const subTree = instance.render.call(instance.proxy, instance.proxy);
 
           patch(null, subTree, container, instance, null);
           instance.subTree = subTree;
