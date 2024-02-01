@@ -15,7 +15,7 @@ export function generate(ast) {
   const signature = args.join(", ");
   genFunctionPreamble(ast, context);
 
-  context.push(`export function ${functionName} (${signature}){`);
+  context.push(`return function ${functionName} (${signature}){`);
 
   context.push(`return `);
 
@@ -39,7 +39,7 @@ function genFunctionPreamble(ast, context) {
       .map((helper) => `${helper} as _${helper}`)
       ?.join(", ");
 
-    context.push(`import { ${helpersString} } from '${VueBinging}'`);
+    context.push(`const { ${helpersString} } = '${VueBinging}'`);
     context.push(`\n`);
   }
 }
