@@ -1,5 +1,9 @@
 import { NodeTypes } from "./ast";
-import { TO_DISPLAY_STRING, helperMapNames } from "./runtimeHelpers";
+import {
+  CREATE_ELEMENT_BLOCK,
+  TO_DISPLAY_STRING,
+  helperMapNames,
+} from "./runtimeHelpers";
 
 interface Options {
   nodeTransforms?: any[];
@@ -49,6 +53,9 @@ function traverseNode(node, context: Context) {
     case NodeTypes.ROOT:
     case NodeTypes.ELEMENT:
       traverseChildren(node, context);
+      if (NodeTypes.ELEMENT === node.type) {
+        context.helper(helperMapNames[CREATE_ELEMENT_BLOCK]);
+      }
     default:
       break;
   }

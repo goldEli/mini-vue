@@ -1,5 +1,9 @@
 import { NodeTypes } from "./ast";
-import { TO_DISPLAY_STRING, helperMapNames } from "./runtimeHelpers";
+import {
+  CREATE_ELEMENT_BLOCK,
+  TO_DISPLAY_STRING,
+  helperMapNames,
+} from "./runtimeHelpers";
 
 const functionName = "render";
 export function generate(ast) {
@@ -50,9 +54,19 @@ function genNode(node, context) {
     case NodeTypes.SIMPLE_EXPRESSION:
       genSimpleExpression(node, context);
       break;
+    case NodeTypes.ELEMENT:
+      genElement(node, context);
+      break;
     default:
       break;
   }
+}
+
+function genElement(node, context) {
+  const { tag, children } = node;
+  context.push(`${context.helper(CREATE_ELEMENT_BLOCK)}(`);
+  context.push(`'${tag}'`);
+  context.push(")");
 }
 
 function genText(node, context) {
