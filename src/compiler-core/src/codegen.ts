@@ -65,7 +65,11 @@ function genNode(node, context) {
 function genElement(node, context) {
   const { tag, children } = node;
   context.push(`${context.helper(CREATE_ELEMENT_VNODE)}(`);
-  context.push(`'${tag}'`);
+  context.push(`'${tag}', null,`);
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    genNode(child, context);
+  }
   context.push(")");
 }
 
