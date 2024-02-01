@@ -395,3 +395,28 @@ vue -> compiler-dom -> complier-core
 
     -> runtime-dom -> runtime-core -> reactivity
 ```
+
+# monorepo
+
+好处
+* 共用配置，多个项目不用重复配置
+* 项目之间调用更方便
+* 版本管理更方便，某一个版本升级，不用每一个库都升级
+* build  发版 更方便
+
+缺点
+* 项目权限管理不能独立控制某个库
+
+## pnpm
+
+* 软链接节约磁盘空间
+* 非扁平结构，nodemodule 展示更清晰, 也可以规避某些包冲突问题
+
+## vitest
+
+
+ 
+
+
+
+
