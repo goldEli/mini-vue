@@ -10,7 +10,7 @@ vue 响应式驱动 ui，ui 通过 template 来描述
 整个过程，依赖几个核心包 complier，runtime-dom,runtime-core,reactivity
 
 * complier 编译 template 生成 render 函数
-* runtime-dom 渲染 render 函数
+* runtime-dom vnode挂载到页面
 * runtime-core 数据和dom 关联
 * reactivity 实现响应式
 
