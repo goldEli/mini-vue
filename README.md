@@ -422,8 +422,8 @@ vue -> compiler-dom -> complier-core
 
 * 在dom挂载前调用，effect 与 dom 无关
 * 依赖发生变化会调用 watchEffect
-* onCleanup 会在 watchEffect 之前调用
-* stop 停止监听
+* onCleanup 会在 watchEffect 之前调用, 初始化不调用
+* stop 停止监听,调用 onCleanup
 
 
 

@@ -3,29 +3,25 @@ import { addWatchEffectJobQueue } from "./scheduler";
 import { ReactiveEffect } from "../../reactivity/src/effect";
 
 export function watchEffect(fn) {
-  let context = {
-    cleanup: null as any,
-  };
+  let cleanup;
   const onCleanup = (cb) => {
-    console.log("onCleanup");
-    context.cleanup = cb; // 保存回调函数
-    // context.cleanup();
+    cleanup = cb; // 保存回调函数
+    effect.onStop = cb;
   };
-  const effect = new ReactiveEffect(
-    () => {
-      console.log("effect run");
-      fn(onCleanup);
-    },
-    () => {
-      addWatchEffectJobQueue(() => {
-        context.cleanup?.();
-        effect.run();
-      });
+  const getter = () => {
+    if (cleanup) {
+      cleanup();
     }
-  );
+    fn(onCleanup);
+  };
+  const job = () => {
+    effect.run();
+  };
+  const effect = new ReactiveEffect(getter, () => {
+    addWatchEffectJobQueue(job);
+  });
 
   const stop = () => {
-    context.cleanup?.();
     effect.stop();
   };
 
