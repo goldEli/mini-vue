@@ -19,6 +19,40 @@ vue -> runtime-dom -> runtime-core -> reactivity
 
 complier 可以脱离vue运行时，好处是打包工具可以提前将 template 编译成 render 函数
 
+#### reactivity 实现响应式
+
+* reactive 数据劫持
+* ref 基础数据劫持
+* computed 计算属性
+  * 维护一个dirty状态，判断是否使用缓存
+* effect 
+  * get 收集依赖
+  * set 触发依赖
+  * scheduler 处理依赖触发时机，比如异步更新
+  * stop 删除依赖
+* 其他
+  * shallowReadonly 处理 props
+
+#### runtime-core 
+
+数据和dom 关联
+
+* setup 
+  * 初始化数据方法
+* render
+  * 创建虚拟dom
+  * 拿到setup的数据
+* patch 
+  * 基于不同的vnode 进行处理
+
+#### runtime-dom
+
+* 处理dom 操作
+* 将 runtime-core 的 vnode 转换成 dom, 挂载到页面
+
+
+
+  
 
 
 # reactivity
