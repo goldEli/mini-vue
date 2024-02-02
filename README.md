@@ -3,10 +3,23 @@ learn vue3
 
 [流程图](https://www.yuque.com/miaoyu-lgfuc/ul2581/xgcrdiqvupc6qe2g?singleDoc#)
 
-* 初始化项目
-* 引入jest
-* babel 配置
-* 配置 ts jest
+# 总结
+
+vue 响应式驱动 ui，ui 通过 template 来描述
+
+整个过程，依赖几个核心包 complier，runtime-dom,runtime-core,reactivity
+
+* complier 编译 template 生成 render 函数
+* runtime-dom 渲染 render 函数
+* runtime-core 数据和dom 关联
+* reactivity 实现响应式
+
+vue -> runtime-dom -> runtime-core -> reactivity
+    -> compiler
+
+complier 可以脱离vue运行时，好处是打包工具可以提前将 template 编译成 render 函数
+
+
 
 # reactivity
 
@@ -424,6 +437,8 @@ vue -> compiler-dom -> complier-core
 * 依赖发生变化会调用 watchEffect
 * onCleanup 会在 watchEffect 之前调用, 初始化不调用
 * stop 停止监听,调用 onCleanup
+
+
 
 
 
