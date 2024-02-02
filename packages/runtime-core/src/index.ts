@@ -1,3 +1,5 @@
+export { watchEffect } from "./apiWatch";
+
 export { nextTick } from "./scheduler";
 export { createTextVNode, createVNode as createElementVNode } from "./vnode";
 export { createRenderer } from "./renderer";

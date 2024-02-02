@@ -29,7 +29,7 @@ data => set trigger dep
 * get 的时候 track依赖
 * set 的时候 trigger依赖
 * effect 运行返回 runner
-* TODO 这个effect 和 watchEffect 有什么区别？
+* 这个effect 和 watchEffect 有什么区别？
 
 ### scheduler 参数
 
@@ -417,6 +417,15 @@ vue -> compiler-dom -> complier-core
   * 执行项目安装 pnpm i @miao-vue/shared --filter @miao-vue/reactivity
   * 修改tsconfig.json, paths
 3. 根目录安装  pnpm i vitest -D -w
+
+# watchEffect
+
+* 在dom挂载前调用，effect 与 dom 无关
+* 依赖发生变化会调用 watchEffect
+* onCleanup 会在 watchEffect 之前调用
+* stop 停止监听
+
+
 
 
 
