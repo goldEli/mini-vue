@@ -1,6 +1,6 @@
 import { effect, stop } from "../effect";
 import { reactive } from "../reactive";
-
+import { vi } from "vitest";
 describe("effect", () => {
   it("happy path", () => {
     const data = reactive({ num: 0 });
@@ -39,7 +39,7 @@ describe("effect", () => {
   it("scheduler", () => {
     let dummy;
     let run: any;
-    const scheduler = jest.fn(() => {
+    const scheduler = vi.fn(() => {
       run = runner;
     });
 
@@ -93,7 +93,7 @@ describe("effect", () => {
     const data = reactive({ num: 0 });
 
     let dummy;
-    const onStop = jest.fn();
+    const onStop = vi.fn();
     const runner = effect(
       () => {
         dummy = data.num;

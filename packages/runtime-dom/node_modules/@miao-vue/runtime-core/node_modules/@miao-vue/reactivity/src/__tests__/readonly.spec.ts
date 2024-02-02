@@ -1,11 +1,13 @@
+import { vi } from "vitest";
 import { readonly, isReadonly, isProxy } from "../reactive";
+
 
 describe("readonly", () => {
   it("should call console.warn when set", () => {
     const original = { num: 1 };
     const wrapped = readonly(original);
 
-    console.warn = jest.fn();
+    console.warn = vi.fn();
     wrapped.num = 2;
 
     expect(console.warn).toHaveBeenCalled();

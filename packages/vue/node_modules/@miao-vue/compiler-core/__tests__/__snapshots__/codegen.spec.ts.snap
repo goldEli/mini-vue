@@ -1,4 +1,16 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`codegen > compound 1`] = `
+"const { createElementVNode: _createElementVNode, toDisplayString: _toDisplayString } = Vue
+return function render (_ctx, _cache, $props, $setup, $data, $options){return _createElementVNode('div', null, 'hi,' + _toDisplayString(_ctx.message))}"
+`;
+
+exports[`codegen > interpolation 1`] = `
+"const { toDisplayString: _toDisplayString } = Vue
+return function render (_ctx, _cache, $props, $setup, $data, $options){return _toDisplayString(_ctx.message)}"
+`;
+
+exports[`codegen > string 1`] = `"return function render (_ctx, _cache, $props, $setup, $data, $options){return 'Hello World'}"`;
 
 exports[`codegen compound 1`] = `
 "const { createElementVNode: _createElementVNode, toDisplayString: _toDisplayString } = Vue

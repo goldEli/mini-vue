@@ -415,7 +415,8 @@ vue -> compiler-dom -> complier-core
 1. create pnpm-workspace.yaml
 2. 每个包都需要一个 package.json pnpm init -y
   * 执行项目安装 pnpm i @miao-vue/shared --filter @miao-vue/reactivity
-  * 修改tsconfig.json, paths 
+  * 修改tsconfig.json, paths
+3. 根目录安装  pnpm i vitest -D -w
 
 
 
