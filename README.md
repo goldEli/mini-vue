@@ -14,8 +14,10 @@ vue 响应式驱动 ui，ui 通过 template 来描述
 * runtime-core 数据和dom 关联
 * reactivity 实现响应式
 
+```
 vue -> runtime-dom -> runtime-core -> reactivity
     -> compiler
+```
 
 complier 可以脱离vue运行时，好处是打包工具可以提前将 template 编译成 render 函数
 
@@ -44,11 +46,43 @@ complier 可以脱离vue运行时，好处是打包工具可以提前将 templat
   * 拿到setup的数据
 * patch 
   * 基于不同的vnode 进行处理
+* 数据更新后，会触发依赖，重新执行render，拿到新的vnode，然后进行patch
+* diff 对比
+  * type 不同直接替换
+  * 对比儿子
+    * 双端算法，找到哪些儿子不一样
+    * 前后新增儿子
+    * 先后添加儿子
+    * 中间的儿子发生变化
+      * 删除 添加
+      * 移动
+        * 最长递增子序列，基于此进行移动
+  * 对比属性
+    * 删除 添加
 
 #### runtime-dom
 
 * 处理dom 操作
 * 将 runtime-core 的 vnode 转换成 dom, 挂载到页面
+
+#### compiler
+
+template => ast => transform ast => generate code => render
+
+* parse
+  * 状态机原理将 template 编译成 render 函数
+  * 遇到 < 处理元素节点
+  * 遇到 {{ 处理插值节点
+  * 其他情况 处理成文本节点
+
+* transform
+  * 遍历处理ast
+  * 处理文本 插值等
+  * 创建联合类型
+* generate
+  * 遍历ast
+  * 创建render 函数
+
 
 
 
